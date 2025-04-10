@@ -36,15 +36,48 @@ async def create_invite_links(client: Client):
 
 
 user_rate_limit = {}
+@Bot.on_message(filters.command("start") & filters.private)
+async def unified_start(client: Client, message: Message):
+    user_id = message.from_user.id
 
-@Bot.on_message(filters.command("start") & filters.private & subscribed)
-async def start_command(client: Client, message: Message):
-    id = message.from_user.id
-    if not await present_user(id):
-        try:
-            await add_user(id)
-        except:
-            pass
+    # Check subscription status
+    if not await subscribed(client, message):
+        # Create invite links before using them
+        invite1, invite2, invite3, invite4 = await create_invite_links(client)
+
+        buttons = [
+            [
+                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite1.invite_link),
+                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite2.invite_link),
+            ],
+            [
+                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite3.invite_link),
+                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite4.invite_link),
+            ]
+        ]
+
+        if FORCE_PIC:
+            return await message.reply_photo(
+                photo=FORCE_PIC,
+                caption=FORCE_MSG.format(mention=message.from_user.mention),
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+        else:
+            return await message.reply_text(
+                text=FORCE_MSG.format(mention=message.from_user.mention),
+                reply_markup=InlineKeyboardMarkup(buttons)
+            )
+
+    # If the user is new, add to DB
+    if not await present_user(user_id):
+        with contextlib.suppress(Exception):
+            await add_user(user_id)
+
+    # --- (REST OF YOUR ORIGINAL START HANDLER CODE GOES HERE BELOW) ---
+
+    # Copy all your boot animation, rate-limiting, /start argument decoding,
+    # auto-delete logic, and greeting logic from your first handler below this point.
+
 	# Get IST time by adding 5 hours 30 minutes to UTC
     ist_now = datetime.utcnow() + timedelta(hours=5, minutes=30)
     ist_hour = ist_now.hour
@@ -273,62 +306,6 @@ WAIT_MSG = """<b><blockquote>I will buy you a lollypop Be patient ...</blockquot
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
 # =====================================================================================##
-
-@Bot.on_message(filters.command('start') & filters.private)
-async def not_joined(client: Client, message: Message):
-    # Create invite links before using them
-    invite1, invite2, invite3, invite4 = await create_invite_links(client)
-
-    buttons = [
-        [
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite1.invite_link),
-            InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite2.invite_link),
-        ],
-        [
-            InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite3.invite_link),
-            InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite4.invite_link),
-        ]
-    ]
-    try:
-        buttons.append(
-            [
-                InlineKeyboardButton(
-                    text='• ɴᴏᴡ ᴄʟɪᴄᴋ ʜᴇʀᴇ •',
-                    url=f"https://t.me/{client.username}?start={message.command[1]}"
-                )
-            ]
-        )
-    except IndexError:
-        pass
-
-
-    if FORCE_PIC:  # Check if FORCE_PIC has a value
-        await message.reply_photo(
-            photo = random.choice(PICS),
-            caption = START_MSG.format(
-                first = message.from_user.first_name,
-                last = message.from_user.last_name,
-                username = None if not message.from_user.username else '@' + message.from_user.username,
-                mention = message.from_user.mention,
-                id = message.from_user.id
-            ),
-            reply_markup =InlineKeyboardMarkup(buttons),
-	      #  message_effect_id=5104841245755180586, #🔥
-	    	quote=True
-        )
-    else:
-        await message.reply(
-            text=FORCE_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=InlineKeyboardMarkup(buttons),
-            quote=True,
-            disable_web_page_preview=True
-        )
 
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
