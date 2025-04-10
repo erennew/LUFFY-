@@ -126,5 +126,14 @@ async def delete_file(messages, client, process):
 
     await process.edit_text(AUTO_DEL_SUCCESS_MSG)
 
+import asyncio
+
+async def auto_clean(client, messages, delay: int = 10):
+    await asyncio.sleep(delay)
+    for msg in messages:
+        try:
+            await msg.delete()
+        except Exception as e:
+            print(f"[AUTO CLEAN] Couldn't delete message {msg.id if msg else 'unknown'}: {e}")
 
 subscribed = filters.create(is_subscribed)
