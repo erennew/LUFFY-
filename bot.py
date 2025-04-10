@@ -83,12 +83,47 @@ class Bot(Client):
 ┈┈▕╱╲╱╲╱╲╱╲▏┈┈┈┈┈┈┈
         """)
 
-        # Start web server
+def run(self):
+    """Run the bot with restart loop."""
+    loop = asyncio.get_event_loop()
+    self.restart_count = 0  # Init restart counter
+
+    async def _start():
+        await self.start()
+
+        # Start aiohttp web server (Koyeb needs this)
         app = web.AppRunner(await web_server())
         await app.setup()
-        bind_address = "0.0.0.0"
-        await web.TCPSite(app, bind_address, PORT).start()
+        await web.TCPSite(app, "0.0.0.0", PORT).start()
 
-    async def stop(self, *args):
-        await super().stop()
+        self.restart_count += 1
+        try:
+            await self.send_message(
+                OWNER_ID,
+                text=f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ ✅\n🔁 Restart Count: <code>{self.restart_count}</code></blockquote></b>",
+            )
+        except Exception as e:
+            self.LOGGER(__name__).warning(f"Couldn't send restart alert: {e}")
+
+        self.LOGGER(__name__).info(f"Bot running. Restart Count: {self.restart_count}")
+
+    async def _stop():
+        await self.stop()
         self.LOGGER(__name__).info("Bot stopped.")
+
+    while True:
+        try:
+            loop.run_until_complete(_start())
+            loop.run_forever()
+        except KeyboardInterrupt:
+            self.LOGGER(__name__).info("Shutting down due to keyboard interrupt.")
+            break
+        except Exception as e:
+            self.LOGGER(__name__).error(f"Bot crashed with error: {e}", exc_info=True)
+            self.LOGGER(__name__).info("Restarting bot in 5 seconds...")
+            loop.run_until_complete(_stop())
+            import time
+            time.sleep(5)  # Short delay before retry
+        finally:
+            loop.run_until_complete(_stop())
+
