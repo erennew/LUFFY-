@@ -3,7 +3,6 @@ import time
 import asyncio
 import random
 import contextlib
-from datetime import datetime
 from pyrogram import Client, filters
 from pyrogram.enums import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
@@ -14,7 +13,7 @@ from config import MAX_REQUESTS, TIME_WINDOW
 from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT, START_PIC, FORCE_PIC, AUTO_DELETE_TIME, AUTO_DELETE_MSG, JOIN_REQUEST_ENABLE, FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2, FORCE_SUB_CHANNEL_3, FORCE_SUB_CHANNEL_4
 from helper_func import subscribed, decode, get_messages, delete_file
 from database.database import add_user, del_user, full_userbase, present_user
-
+from datetime import datetime, timedelta
 
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
@@ -46,10 +45,15 @@ async def start_command(client: Client, message: Message):
             await add_user(id)
         except:
             pass
-
-    hour = datetime.now().hour
-    if hour >= 22 or hour < 6:
+	# Get IST time by adding 5 hours 30 minutes to UTC
+    ist_now = datetime.utcnow() + timedelta(hours=5, minutes=30)
+    ist_hour = ist_now.hour
+	
+    if ist_hour >= 22 or ist_hour < 6:
         await message.reply("🌙 Ara Ara~ It’s sleepy hours, but LUFFY's still awake to guard your files! 🛌👒")
+
+
+
 
     # Rate limit check
     now = time.time()
