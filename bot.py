@@ -1,3 +1,4 @@
+import asyncio
 from aiohttp import web
 from plugins import web_server
 import time
@@ -12,7 +13,7 @@ from config import (
     API_HASH, APP_ID, LOGGER, TG_BOT_TOKEN, TG_BOT_WORKERS,
     FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2,
     FORCE_SUB_CHANNEL_3, FORCE_SUB_CHANNEL_4,
-    CHANNEL_ID, PORT
+    CHANNEL_ID, PORT, OWNER_ID  # Make sure OWNER_ID is included!
 )
 
 class Bot(Client):
@@ -27,6 +28,8 @@ class Bot(Client):
         )
         self.LOGGER = LOGGER
         self.restart_count = 0
+        self.uptime = None
+
     async def start(self, use_qr=False, except_ids=None):
         self.LOGGER(__name__).info("🚀 Starting bot initialization...")
         await super().start()
@@ -41,19 +44,18 @@ class Bot(Client):
             self.LOGGER(__name__).error(f"❌ Failed to fetch bot info using get_me(): {e}")
             self.LOGGER(__name__).info("Make sure your TG_BOT_TOKEN is valid and the bot is not blocked.")
             sys.exit()
-       # ✅ Send restart notification to OWNER
+
         try:
             await self.send_message(
                 OWNER_ID,
                 text=(
-                    f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ ✅</blockquote></b>\n"
-                    f"🔁 <b>Restart Count:</b> <code>{self.restart_count}</code>\n"
-                    f"👤 <b>Bot:</b> @{self.username}"
-                ),
+                    f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ ✅\n\n"
+                    f"🔁 Restart Count: <code>{self.restart_count}</code></blockquote></b>"
+                )
             )
         except Exception as e:
-            self.LOGGER(__name__).warning(f"Couldn't send restart message to owner: {e}")
-        # Force Sub Channels
+            self.LOGGER(__name__).warning(f"Couldn't send restart message: {e}")
+
         for idx, channel in enumerate([
             FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2,
             FORCE_SUB_CHANNEL_3, FORCE_SUB_CHANNEL_4
@@ -70,7 +72,6 @@ class Bot(Client):
                     self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/weebs_support for support")
                     sys.exit()
 
-        # DB Channel Check
         try:
             db_channel = await self.get_chat(CHANNEL_ID)
             self.db_channel = db_channel
@@ -94,47 +95,58 @@ class Bot(Client):
 ┈┈▕╱╲╱╲╱╲╱╲▏┈┈┈┈┈┈┈
         """)
 
-def run(self):
-    """Run the bot with restart loop."""
-    loop = asyncio.get_event_loop()
-    self.restart_count = 0  # Init restart counter
+    async def stop(self, *args):
+        await super().stop()
+        self.LOGGER(__name__).info("🛑 Bot stopped gracefully.")
 
-    async def _start():
-        await self.start()
+    async def web_server(self):
+        async def index(request):
+            return web.Response(text="✅ Bot is Alive")
+        app = web.Application()
+        app.router.add_get("/", index)
+        return app
 
-        # Start aiohttp web server (Koyeb needs this)
-        app = web.AppRunner(await web_server())
-        await app.setup()
-        await web.TCPSite(app, "0.0.0.0", PORT).start()
+    def run(self):
+        loop = asyncio.get_event_loop()
+        self.restart_count = 0
 
-        self.restart_count += 1
-        try:
-            await self.send_message(
-                OWNER_ID,
-                text=f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ ✅\n🔁 Restart Count: <code>{self.restart_count}</code></blockquote></b>",
-            )
-        except Exception as e:
-            self.LOGGER(__name__).warning(f"Couldn't send restart alert: {e}")
+        async def _start():
+            await self.start()
 
-        self.LOGGER(__name__).info(f"Bot running. Restart Count: {self.restart_count}")
+            # Start aiohttp web server (Koyeb needs this)
+            app = web.AppRunner(await self.web_server())
+            await app.setup()
+            await web.TCPSite(app, "0.0.0.0", PORT).start()
 
-    async def _stop():
-        await self.stop()
-        self.LOGGER(__name__).info("Bot stopped.")
+            self.restart_count += 1
+            try:
+                await self.send_message(
+                    OWNER_ID,
+                    text=(
+                        f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ ✅\n"
+                        f"🔁 Restart Count: <code>{self.restart_count}</code></blockquote></b>"
+                    )
+                )
+            except Exception as e:
+                self.LOGGER(__name__).warning(f"Couldn't send restart alert: {e}")
 
-    while True:
-        try:
-            loop.run_until_complete(_start())
-            loop.run_forever()
-        except KeyboardInterrupt:
-            self.LOGGER(__name__).info("Shutting down due to keyboard interrupt.")
-            break
-        except Exception as e:
-            self.LOGGER(__name__).error(f"Bot crashed with error: {e}", exc_info=True)
-            self.LOGGER(__name__).info("Restarting bot in 5 seconds...")
-            loop.run_until_complete(_stop())
-            import time
-            time.sleep(5)  # Short delay before retry
-        finally:
-            loop.run_until_complete(_stop())
+            self.LOGGER(__name__).info(f"Bot running. Restart Count: {self.restart_count}")
 
+        async def _stop():
+            await self.stop()
+            self.LOGGER(__name__).info("Bot stopped.")
+
+        while True:
+            try:
+                loop.run_until_complete(_start())
+                loop.run_forever()
+            except KeyboardInterrupt:
+                self.LOGGER(__name__).info("Shutting down due to keyboard interrupt.")
+                break
+            except Exception as e:
+                self.LOGGER(__name__).error(f"Bot crashed with error: {e}", exc_info=True)
+                self.LOGGER(__name__).info("Restarting bot in 5 seconds...")
+                loop.run_until_complete(_stop())
+                time.sleep(5)
+            finally:
+                loop.run_until_complete(_stop())
