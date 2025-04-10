@@ -1,19 +1,16 @@
 import asyncio
+import sys
 from aiohttp import web
-from plugins import web_server
-import time
-
-import pyromod.listen
 from pyrogram import Client
 from pyrogram.enums import ParseMode
-import sys
 from datetime import datetime
+import pyromod.listen
 
 from config import (
     API_HASH, APP_ID, LOGGER, TG_BOT_TOKEN, TG_BOT_WORKERS,
     FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2,
     FORCE_SUB_CHANNEL_3, FORCE_SUB_CHANNEL_4,
-    CHANNEL_ID, PORT, OWNER_ID  # Make sure OWNER_ID is included!
+    CHANNEL_ID, PORT, OWNER_ID
 )
 
 class Bot(Client):
@@ -42,9 +39,9 @@ class Bot(Client):
             self.username = usr_bot_me.username
         except Exception as e:
             self.LOGGER(__name__).error(f"❌ Failed to fetch bot info using get_me(): {e}")
-            self.LOGGER(__name__).info("Make sure your TG_BOT_TOKEN is valid and the bot is not blocked.")
             sys.exit()
 
+        # Notify owner
         try:
             await self.send_message(
                 OWNER_ID,
@@ -56,6 +53,7 @@ class Bot(Client):
         except Exception as e:
             self.LOGGER(__name__).warning(f"Couldn't send restart message: {e}")
 
+        # Force Sub Channel Links
         for idx, channel in enumerate([
             FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2,
             FORCE_SUB_CHANNEL_3, FORCE_SUB_CHANNEL_4
@@ -66,34 +64,21 @@ class Bot(Client):
                     link = chat.invite_link or await self.export_chat_invite_link(channel)
                     setattr(self, f"invitelink{'' if idx == 1 else idx}", link)
                 except Exception as e:
-                    self.LOGGER(__name__).warning(e)
-                    self.LOGGER(__name__).warning(f"Bot can't Export Invite link from Force Sub Channel {idx}!")
-                    self.LOGGER(__name__).warning(f"Check the FORCE_SUB_CHANNEL_{idx} value and ensure the bot is admin with Invite Users via Link permission.")
-                    self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/weebs_support for support")
+                    self.LOGGER(__name__).warning(f"Force Sub Channel {idx} Error: {e}")
                     sys.exit()
 
+        # DB Channel Check
         try:
             db_channel = await self.get_chat(CHANNEL_ID)
             self.db_channel = db_channel
             test = await self.send_message(chat_id=db_channel.id, text="Test Message")
             await test.delete()
         except Exception as e:
-            self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning(f"Check DB Channel (CHANNEL_ID={CHANNEL_ID}) and ensure bot is admin.")
-            self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/weebs_support for support")
+            self.LOGGER(__name__).warning(f"Check DB Channel Error: {e}")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/WeekendsBotz")
-        self.LOGGER(__name__).info(r"""       
-  ┈┈┈╱▔▔▔▔▔▔╲┈╭━━━━━━━╮┈┈
-┈┈▕┈╭━╮╭━╮┈▏┃𝕎𝕖𝕖𝕜𝕖𝕟𝕕𝕤𝔹𝕠𝕥𝕫
-┈┈▕┈┃╭╯╰╮┃┈▏╰┳━━━━━━╯┈┈
-┈┈▕┈╰╯╭╮╰╯┈▏┈┃┈┈┈┈┈
-┈┈▕┈┈┈┃┃┈┈┈▏━╯┈┈┈┈┈
-┈┈▕┈┈┈╰╯┈┈┈▏┈┈┈┈┈┈┈
-┈┈▕╱╲╱╲╱╲╱╲▏┈┈┈┈┈┈┈
-        """)
+        self.LOGGER(__name__).info("✅ Bot started successfully.")
 
     async def stop(self, *args):
         await super().stop()
@@ -106,47 +91,37 @@ class Bot(Client):
         app.router.add_get("/", index)
         return app
 
-    def run(self):
-        loop = asyncio.get_event_loop()
-        self.restart_count = 0
+def run_bot():
+    bot = Bot()
+    loop = asyncio.get_event_loop()
 
-        async def _start():
-            await self.start()
-
-            # Start aiohttp web server (Koyeb needs this)
-            app = web.AppRunner(await self.web_server())
-            await app.setup()
-            await web.TCPSite(app, "0.0.0.0", PORT).start()
-
-            self.restart_count += 1
-            try:
-                await self.send_message(
-                    OWNER_ID,
-                    text=(
-                        f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ ✅\n"
-                        f"🔁 Restart Count: <code>{self.restart_count}</code></blockquote></b>"
-                    )
-                )
-            except Exception as e:
-                self.LOGGER(__name__).warning(f"Couldn't send restart alert: {e}")
-
-            self.LOGGER(__name__).info(f"Bot running. Restart Count: {self.restart_count}")
-
-        async def _stop():
-            await self.stop()
-            self.LOGGER(__name__).info("Bot stopped.")
-
+    async def _main():
         while True:
             try:
-                loop.run_until_complete(_start())
-                loop.run_forever()
-            except KeyboardInterrupt:
-                self.LOGGER(__name__).info("Shutting down due to keyboard interrupt.")
-                break
+                bot.restart_count += 1
+                await bot.start()
+
+                # Web server (Koyeb ping)
+                app = await bot.web_server()
+                runner = web.AppRunner(app)
+                await runner.setup()
+                site = web.TCPSite(runner, "0.0.0.0", PORT)
+                await site.start()
+
+                bot.LOGGER(__name__).info(f"🌐 Web server started on port {PORT}")
+                bot.LOGGER(__name__).info(f"🔁 Restart Count: {bot.restart_count}")
+
+                await asyncio.Event().wait()  # Keep running
+
             except Exception as e:
-                self.LOGGER(__name__).error(f"Bot crashed with error: {e}", exc_info=True)
-                self.LOGGER(__name__).info("Restarting bot in 5 seconds...")
-                loop.run_until_complete(_stop())
-                time.sleep(5)
-            finally:
-                loop.run_until_complete(_stop())
+                bot.LOGGER(__name__).error(f"🔥 Bot crashed: {e}", exc_info=True)
+                await bot.stop()
+                await asyncio.sleep(5)  # Wait before restart
+
+    try:
+        loop.run_until_complete(_main())
+    except KeyboardInterrupt:
+        loop.run_until_complete(bot.stop())
+        bot.LOGGER(__name__).info("⛔ Stopped by user.")
+
+
