@@ -1,0 +1,12 @@
+https://codeload.github.com/KurimuzonAkuma/pyrogram/zip/refs/heads/dev
+# --- For-Bot-Working --------- #
+pyrogram
+TgCrypto
+pyromod==1.5
+python-dotenv
+# --- For-Database ------------ #
+pymongo
+dnspython
+# --- For-Web-Response ------- #
+aiohttp
+asyncio
