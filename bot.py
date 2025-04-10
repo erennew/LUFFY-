@@ -26,7 +26,7 @@ class Bot(Client):
             bot_token=TG_BOT_TOKEN
         )
         self.LOGGER = LOGGER
-
+        self.restart_count = 0
     async def start(self, use_qr=False, except_ids=None):
         self.LOGGER(__name__).info("🚀 Starting bot initialization...")
         await super().start()
@@ -41,7 +41,18 @@ class Bot(Client):
             self.LOGGER(__name__).error(f"❌ Failed to fetch bot info using get_me(): {e}")
             self.LOGGER(__name__).info("Make sure your TG_BOT_TOKEN is valid and the bot is not blocked.")
             sys.exit()
-
+       # ✅ Send restart notification to OWNER
+        try:
+            await self.send_message(
+                OWNER_ID,
+                text=(
+                    f"<b><blockquote>🤖 Bᴏᴛ Rᴇsᴛᴀʀᴛᴇᴅ ✅</blockquote></b>\n"
+                    f"🔁 <b>Restart Count:</b> <code>{self.restart_count}</code>\n"
+                    f"👤 <b>Bot:</b> @{self.username}"
+                ),
+            )
+        except Exception as e:
+            self.LOGGER(__name__).warning(f"Couldn't send restart message to owner: {e}")
         # Force Sub Channels
         for idx, channel in enumerate([
             FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2,
