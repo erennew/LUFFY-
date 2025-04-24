@@ -127,13 +127,39 @@ async def delete_file(messages, client, process):
     await process.edit_text(AUTO_DEL_SUCCESS_MSG)
 
 import asyncio
+from pyrogram import Client, types
+from config import AUTO_CLEAN, DELETE_DELAY  # Import your config settings
 
-async def auto_clean(client, messages, delay: int = 10):
-    await asyncio.sleep(delay)
-    for msg in messages:
+async def delete_message_with_delay(message: types.Message, delay: int = DELETE_DELAY):
+    """Deletes a message after a specified delay (default from config)."""
+    try:
+        # Wait for the specified delay (in seconds)
+        await asyncio.sleep(delay)
+        
+        # Delete the message
+        await message.delete()
+
+        print(f"Message {message.id} deleted after {delay} seconds.")
+    except Exception as e:
+        print(f"[ERROR] Couldn't delete message {message.id}: {e}")
+
+async def auto_clean(client: Client, message: types.Message, delay: int = DELETE_DELAY):
+    """Automatically deletes a message after the set delay if AUTO_CLEAN is enabled."""
+    if AUTO_CLEAN:  # Check if auto-clean is enabled
+        await delete_message_with_delay(message, delay)
+    else:
+        print("Auto clean is disabled. Message won't be deleted.")
+
+# Function to auto-delete files after a certain delay
+async def delete_file_after_delay(message: types.Message, delay: int = DELETE_DELAY):
+    """Deletes a file (or any message) after the specified delay."""
+    if AUTO_CLEAN:
+        await asyncio.sleep(delay)
         try:
-            await msg.delete()
+            await message.delete()
+            print(f"File {message.id} deleted after {delay} seconds.")
         except Exception as e:
-            print(f"[AUTO CLEAN] Couldn't delete message {msg.id if msg else 'unknown'}: {e}")
+            print(f"[ERROR] Couldn't delete file {message.id}: {e}")
+
 
 subscribed = filters.create(is_subscribed)
