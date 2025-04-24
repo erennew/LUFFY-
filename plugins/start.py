@@ -297,11 +297,24 @@ async def unified_start(client: Client, message: Message):
         )
 
 
+WAIT_MSGS = [
+    """<b><blockquote>Oi, hold on a sec! I’m out here fighting Kaido... but I’ll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
+    """<b><blockquote>Gomu Gomu no wait! 🍩 Luffy’s gonna get to you in a bit, just give me a second!</blockquote></b>""",
+    """<b><blockquote>Wanna see a pirate's patience? You gotta wait just a bit... Trust me, the treasure's coming! 🏝️</blockquote></b>""",
+    """<b><blockquote>Ha! Even a pirate king needs a break! Hang tight, the loot will be here soon! 🍖🍻</blockquote></b>""",
+    """<b><blockquote>Luffy’s busy flexing his muscles, but don’t worry! You’ll get what you want in a second! 💪</blockquote></b>""",
+    """<b><blockquote>Gomu Gomu no patience! Hold tight, I’ll bring the treasure to you in no time! ⚔️🍖</blockquote></b>""",
+    """<b><blockquote>Just a few more seconds! I’m busy with the crew, but I promise the reward will be worth it! 🚢</blockquote></b>""",
+    """<b><blockquote>I’m still in the middle of a crazy adventure! Give me a second, and I’ll be right with you! 🍉</blockquote></b>""",
+    """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
+    """<b><blockquote>Patience, my friend! I’m off to find the One Piece, but I’ll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
+]
 
 
 # =====================================================================================##
 
-WAIT_MSG = """<b><blockquote>I will buy you a lollypop Be patient ...</blockquote></b>"""
+WAIT_MSG = random.choice(WAIT_MSGS)  # Randomly select a wait message
+await message.reply_text(WAIT_MSG, parse_mode="html")
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
