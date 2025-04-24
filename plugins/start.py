@@ -301,7 +301,7 @@ async def unified_start(client: Client, message: Message):
             disable_web_page_preview=True,
             quote=True
         )
-     if AUTO_CLEAN:
+    if AUTO_CLEAN:
         await asyncio.sleep(DELETE_DELAY)
         await wait.delete()
         await msg.delete()
