@@ -270,36 +270,36 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-	if START_PIC:
-	    msg = await message.reply_photo(
-	        photo=random.choice(PICS),
-	        caption=START_MSG.format(
-	            first=message.from_user.first_name,
-	            last=message.from_user.last_name,
-	            username=None if not message.from_user.username else '@' + message.from_user.username,
-	            mention=message.from_user.mention,
-	            id=message.from_user.id
-	        ),
-	        reply_markup=reply_markup,
-	        quote=True
-	    )
-	else:
-	    msg = await message.reply_text(
-	        text=START_MSG.format(
-	            first=message.from_user.first_name,
-	            last=message.from_user.last_name,
-	            username=None if not message.from_user.username else '@' + message.from_user.username,
-	            mention=message.from_user.mention,
-	            id=message.from_user.id
-	        ),
-	        reply_markup=reply_markup,
-	        disable_web_page_preview=True,
-	        quote=True
-	    )
-	
-	# Auto-delete after configured delay if enabled
-	await auto_clean(client, msg)
-	
+if START_PIC:
+    msg = await message.reply_photo(
+        photo=random.choice(PICS),
+        caption=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup,
+        quote=True
+    )
+else:
+    msg = await message.reply_text(
+        text=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup,
+        disable_web_page_preview=True,
+        quote=True
+    )
+
+# Auto-delete after configured delay if enabled
+await auto_clean(client, msg)
+
 WAIT_MSGS = [
 	    """<b><blockquote>Oi, hold on a sec! I’m out here fighting Kaido... but I’ll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
 	    """<b><blockquote>Gomu Gomu no wait! 🍩 Luffy’s gonna get to you in a bit, just give me a second!</blockquote></b>""",
