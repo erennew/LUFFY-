@@ -269,7 +269,12 @@ async def unified_start(client: Client, message: Message):
             ]
         ]
     )
+        # Send the wait message first
+    WAIT_MSG = random.choice(WAIT_MSGS)
+    wait = await message.reply_text(WAIT_MSG, parse_mode="html")
 
+    # Optional: Delay slightly before sending START_MSG (just for smoother pacing)
+    await asyncio.sleep(1)
     if START_PIC:
         msg = await message.reply_photo(
             photo=random.choice(PICS),
@@ -296,14 +301,13 @@ async def unified_start(client: Client, message: Message):
             disable_web_page_preview=True,
             quote=True
         )
+     if AUTO_CLEAN:
+        await asyncio.sleep(DELETE_DELAY)
+        await wait.delete()
+        await msg.delete()
 
     # Auto-delete after configured delay if enabled
-    await auto_clean(client, msg)
-    WAIT_MSG = random.choice(WAIT_MSGS)  # Randomly select a wait message
-    wait = await message.reply_text(WAIT_MSG, parse_mode="html")
-    if AUTO_CLEAN:
-   	 await asyncio.sleep(DELETE_DELAY)
-   	 await wait.delete()
+
 
 
 WAIT_MSGS = [
