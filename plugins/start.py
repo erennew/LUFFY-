@@ -299,6 +299,11 @@ async def unified_start(client: Client, message: Message):
 
     # Auto-delete after configured delay if enabled
     await auto_clean(client, msg)
+    WAIT_MSG = random.choice(WAIT_MSGS)  # Randomly select a wait message
+    wait = await message.reply_text(WAIT_MSG, parse_mode="html")
+    if AUTO_CLEAN:
+   	 await asyncio.sleep(DELETE_DELAY)
+   	 await wait.delete()
 
 
 WAIT_MSGS = [
@@ -317,11 +322,6 @@ WAIT_MSGS = [
 
 # =====================================================================================##
 
-WAIT_MSG = random.choice(WAIT_MSGS)  # Randomly select a wait message
-wait = await message.reply_text(WAIT_MSG, parse_mode="html")
-if AUTO_CLEAN:
-    await asyncio.sleep(DELETE_DELAY)
-    await wait.delete()
 
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
