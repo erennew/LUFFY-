@@ -271,7 +271,8 @@ async def unified_start(client: Client, message: Message):
     )
         # Send the wait message first
     WAIT_MSG = random.choice(WAIT_MSGS)
-    wait = await message.reply_text(WAIT_MSG, parse_mode="html")
+    msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
+
 
     # Optional: Delay slightly before sending START_MSG (just for smoother pacing)
     await asyncio.sleep(1)
