@@ -14,7 +14,7 @@ from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL
 from helper_func import subscribed, decode, get_messages, delete_file
 from database.database import add_user, del_user, full_userbase, present_user
 from datetime import datetime, timedelta
-
+from config import DELETE_DELAY, AUTO_CLEAN
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
         chat_id=FORCE_SUB_CHANNEL_1,
@@ -83,7 +83,8 @@ async def unified_start(client: Client, message: Message):
     ist_hour = ist_now.hour
 	
     if ist_hour >= 22 or ist_hour < 6:
-        await message.reply("🌙 Ara Ara~ It’s sleepy hours, but LUFFY's still awake to guard your files! 🛌👒")
+    sleepy_msg = await message.reply("🌙 Ara Ara~ It’s sleepy hours, but LUFFY's still awake to guard your files! 🛌👒")
+    await auto_clean(client, sleepy_msg)  # Auto-deletes based on AUTO_CLEAN & DELETE_DELAY
 
 
 
@@ -269,46 +270,48 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-    if START_PIC:
-        await message.reply_photo(
-            photo=random.choice(PICS),
-            caption=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=reply_markup,
-            quote=True
-        )
-    else:
-        await message.reply_text(
-            text=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=reply_markup,
-            disable_web_page_preview=True,
-            quote=True
-        )
+if START_PIC:
+    msg = await message.reply_photo(
+        photo=random.choice(PICS),
+        caption=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup,
+        quote=True
+    )
+else:
+    msg = await message.reply_text(
+        text=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=None if not message.from_user.username else '@' + message.from_user.username,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup,
+        disable_web_page_preview=True,
+        quote=True
+    )
 
-
-WAIT_MSGS = [
-    """<b><blockquote>Oi, hold on a sec! I’m out here fighting Kaido... but I’ll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
-    """<b><blockquote>Gomu Gomu no wait! 🍩 Luffy’s gonna get to you in a bit, just give me a second!</blockquote></b>""",
-    """<b><blockquote>Wanna see a pirate's patience? You gotta wait just a bit... Trust me, the treasure's coming! 🏝️</blockquote></b>""",
-    """<b><blockquote>Ha! Even a pirate king needs a break! Hang tight, the loot will be here soon! 🍖🍻</blockquote></b>""",
-    """<b><blockquote>Luffy’s busy flexing his muscles, but don’t worry! You’ll get what you want in a second! 💪</blockquote></b>""",
-    """<b><blockquote>Gomu Gomu no patience! Hold tight, I’ll bring the treasure to you in no time! ⚔️🍖</blockquote></b>""",
-    """<b><blockquote>Just a few more seconds! I’m busy with the crew, but I promise the reward will be worth it! 🚢</blockquote></b>""",
-    """<b><blockquote>I’m still in the middle of a crazy adventure! Give me a second, and I’ll be right with you! 🍉</blockquote></b>""",
-    """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
-    """<b><blockquote>Patience, my friend! I’m off to find the One Piece, but I’ll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
-]
+# Auto-delete after configured delay if enabled
+await auto_clean(client, msg)
+	
+ WAIT_MSGS = [
+	    """<b><blockquote>Oi, hold on a sec! I’m out here fighting Kaido... but I’ll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
+	    """<b><blockquote>Gomu Gomu no wait! 🍩 Luffy’s gonna get to you in a bit, just give me a second!</blockquote></b>""",
+	    """<b><blockquote>Wanna see a pirate's patience? You gotta wait just a bit... Trust me, the treasure's coming! 🏝️</blockquote></b>""",
+	    """<b><blockquote>Ha! Even a pirate king needs a break! Hang tight, the loot will be here soon! 🍖🍻</blockquote></b>""",
+	    """<b><blockquote>Luffy’s busy flexing his muscles, but don’t worry! You’ll get what you want in a second! 💪</blockquote></b>""",
+	    """<b><blockquote>Gomu Gomu no patience! Hold tight, I’ll bring the treasure to you in no time! ⚔️🍖</blockquote></b>""",
+	    """<b><blockquote>Just a few more seconds! I’m busy with the crew, but I promise the reward will be worth it! 🚢</blockquote></b>""",
+	    """<b><blockquote>I’m still in the middle of a crazy adventure! Give me a second, and I’ll be right with you! 🍉</blockquote></b>""",
+	    """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
+	    """<b><blockquote>Patience, my friend! I’m off to find the One Piece, but I’ll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
+	]
 
 
 # =====================================================================================##
