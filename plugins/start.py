@@ -296,9 +296,10 @@ else:
         disable_web_page_preview=True,
         quote=True
     )
-
 # Auto-delete after configured delay if enabled
 await auto_clean(client, msg)
+
+
 
 WAIT_MSGS = [
 	    """<b><blockquote>Oi, hold on a sec! I’m out here fighting Kaido... but I’ll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
