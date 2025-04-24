@@ -127,8 +127,8 @@ async def delete_file(messages, client, process):
     await process.edit_text(AUTO_DEL_SUCCESS_MSG)
 
 import asyncio
-from pyrogram import Client, types
-from config import AUTO_CLEAN, DELETE_DELAY  # Import your config settings
+from config import DELETE_DELAY, AUTO_CLEAN  # Assuming these are set in your config
+from pyrogram import types, Client
 
 async def delete_message_with_delay(message: types.Message, delay: int = DELETE_DELAY):
     """Deletes a message after a specified delay (default from config)."""
@@ -138,28 +138,37 @@ async def delete_message_with_delay(message: types.Message, delay: int = DELETE_
         
         # Delete the message
         await message.delete()
-
         print(f"Message {message.id} deleted after {delay} seconds.")
     except Exception as e:
         print(f"[ERROR] Couldn't delete message {message.id}: {e}")
 
+
 async def auto_clean(client: Client, message: types.Message, delay: int = DELETE_DELAY):
     """Automatically deletes a message after the set delay if AUTO_CLEAN is enabled."""
     if AUTO_CLEAN:  # Check if auto-clean is enabled
-        await delete_message_with_delay(message, delay)
+        if message.text:  # Only delete if it's a text message
+            await delete_message_with_delay(message, delay)
+        else:
+            print("Non-text message, no deletion performed.")
     else:
         print("Auto clean is disabled. Message won't be deleted.")
 
-# Function to auto-delete files after a certain delay
-async def delete_file_after_delay(message: types.Message, delay: int = DELETE_DELAY):
-    """Deletes a file (or any message) after the specified delay."""
-    if AUTO_CLEAN:
-        await asyncio.sleep(delay)
-        try:
-            await message.delete()
-            print(f"File {message.id} deleted after {delay} seconds.")
-        except Exception as e:
-            print(f"[ERROR] Couldn't delete file {message.id}: {e}")
 
+async def send_and_delete_wait_message(client, message, delay: int = DELETE_DELAY):
+    """Sends a wait message and deletes it after the specified delay."""
+    try:
+        # Send the wait message
+        wait_message = random.choice(WAIT_MSGS)  # Randomly select a wait message
+        sent_message = await message.reply_text(wait_message, parse_mode="html")
+        
+        # Wait for the specified delay
+        await asyncio.sleep(delay)
+        
+        # Delete the wait message after the delay
+        await sent_message.delete()
+        print(f"Wait message {sent_message.id} deleted after {delay} seconds.")
+    
+    except Exception as e:
+        print(f"[ERROR] Couldn't delete wait message {sent_message.id}: {e}")
 
 subscribed = filters.create(is_subscribed)
