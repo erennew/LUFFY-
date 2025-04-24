@@ -1,13 +1,13 @@
 from bot import Bot
 from pyrogram.types import Message
 from pyrogram import filters
-from config import ADMINS, BOT_STATS_TEXT, USER_REPLY_TEXT
+from config import ADMINS, BOT_STATS_TEXT, USER_REPLY_TEXT, DELETE_DELAY
 from datetime import datetime
 from helper_func import get_readable_time
 import time
 import psutil
 
-@Bot.on_message(filters.command('stats') & filters.user(ADMINS))  # Allow only admins to use /stats
+@Bot.on_message(filters.command('stats') & filters.user(ADMINS))  # Only admins allowed to use /stats
 async def stats(bot: Bot, message: Message):
     now = datetime.now()
     delta = now - bot.uptime
@@ -38,8 +38,8 @@ async def stats(bot: Bot, message: Message):
     # Send the stats message
     await ping_response.edit(stats_text)
 
-    # Auto-delete the message after 15 seconds
-    await ping_response.delete(delay=15)
+    # Auto-delete the message after the configured DELETE_DELAY time
+    await ping_response.delete(delay=DELETE_DELAY)
 
 @Bot.on_message(filters.private & filters.incoming)
 async def useless(_, message: Message):
