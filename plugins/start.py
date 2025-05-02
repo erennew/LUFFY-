@@ -15,6 +15,20 @@ from helper_func import subscribed, decode, get_messages, delete_file
 from database.database import add_user, del_user, full_userbase, present_user
 from datetime import datetime, timedelta
 from config import DELETE_DELAY, AUTO_CLEAN
+
+WAIT_MSGS = [
+    """<b><blockquote>Oi, hold on a sec! I'm out here fighting Kaido... but I'll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
+    """<b><blockquote>Gomu Gomu no wait! 🍩 Luffy's gonna get to you in a bit, just give me a second!</blockquote></b>""",
+    """<b><blockquote>Wanna see a pirate's patience? You gotta wait just a bit... Trust me, the treasure's coming! 🏝️</blockquote></b>""",
+    """<b><blockquote>Ha! Even a pirate king needs a break! Hang tight, the loot will be here soon! 🍖🍻</blockquote></b>""",
+    """<b><blockquote>Luffy's busy flexing his muscles, but don't worry! You'll get what you want in a second! 💪</blockquote></b>""",
+    """<b><blockquote>Gomu Gomu no patience! Hold tight, I'll bring the treasure to you in no time! ⚔️🍖</blockquote></b>""",
+    """<b><blockquote>Just a few more seconds! I'm busy with the crew, but I promise the reward will be worth it! 🚢</blockquote></b>""",
+    """<b><blockquote>I'm still in the middle of a crazy adventure! Give me a second, and I'll be right with you! 🍉</blockquote></b>""",
+    """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
+    """<b><blockquote>Patience, my friend! I'm off to find the One Piece, but I'll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
+]
+
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
         chat_id=FORCE_SUB_CHANNEL_1,
@@ -34,11 +48,27 @@ async def create_invite_links(client: Client):
     )
     return invite1, invite2, invite3, invite4
 
+async def auto_clean(client: Client, message: Message):
+    if AUTO_CLEAN:
+        await asyncio.sleep(DELETE_DELAY)
+        await message.delete()
 
 user_rate_limit = {}
+
 @Bot.on_message(filters.command("start") & filters.private)
 async def unified_start(client: Client, message: Message):
     user_id = message.from_user.id
+    
+    # Rate limit check
+    now = time.time()
+    reqs = user_rate_limit.get(user_id, [])
+    reqs = [t for t in reqs if now - t < TIME_WINDOW]
+    if len(reqs) >= MAX_REQUESTS:
+        wait_time = int(TIME_WINDOW - (now - reqs[0]))
+        return await message.reply(f"⚠️ Slow down, nakama! You're too fast for LUFFY! Wait a bit and try again~ 💤\n\nTry again in <b>{wait_time}</b> seconds. 🐢")
+    
+    reqs.append(now)
+    user_rate_limit[user_id] = reqs
 
     # Check subscription status
     if not await subscribed(client, message):
@@ -57,104 +87,83 @@ async def unified_start(client: Client, message: Message):
         ]
 
         if FORCE_PIC:
-            return await message.reply_photo(
+            msg = await message.reply_photo(
                 photo=FORCE_PIC,
                 caption=FORCE_MSG.format(mention=message.from_user.mention),
                 reply_markup=InlineKeyboardMarkup(buttons)
             )
         else:
-            return await message.reply_text(
+            msg = await message.reply_text(
                 text=FORCE_MSG.format(mention=message.from_user.mention),
                 reply_markup=InlineKeyboardMarkup(buttons)
             )
+        
+        if AUTO_CLEAN:
+            asyncio.create_task(auto_clean(client, msg))
+        return
 
     # If the user is new, add to DB
     if not await present_user(user_id):
         with contextlib.suppress(Exception):
             await add_user(user_id)
 
-    # --- (REST OF YOUR ORIGINAL START HANDLER CODE GOES HERE BELOW) ---
-
-    # Copy all your boot animation, rate-limiting, /start argument decoding,
-    # auto-delete logic, and greeting logic from your first handler below this point.
-
-	# Get IST time by adding 5 hours 30 minutes to UTC
+    # Get IST time by adding 5 hours 30 minutes to UTC
     ist_now = datetime.utcnow() + timedelta(hours=5, minutes=30)
     ist_hour = ist_now.hour
-	
+    
     if ist_hour >= 22 or ist_hour < 6:
-        sleepy_msg = await message.reply("🌙 Ara Ara~ It’s sleepy hours, but LUFFY's still awake to guard your files! 🛌👒")
-        await auto_clean(client, sleepy_msg)  # Auto-deletes based on AUTO_CLEAN & DELETE_DELAY
-
-
-
-
-    # Rate limit check
-    now = time.time()
-    reqs = user_rate_limit.get(id, [])
-    reqs = [t for t in reqs if now - t < TIME_WINDOW]
-    if len(reqs) >= MAX_REQUESTS:
-        wait_time = int(TIME_WINDOW - (now - reqs[0]))
-        return await message.reply(f"⚠️ Slow down, nakama! You're too fast for LUFFY! Wait a bit and try again~ 💤\n\nTry again in <b>{wait_time}</b> seconds. 🐢")
-
-
-    reqs.append(now)
-    user_rate_limit[id] = reqs
+        sleepy_msg = await message.reply("🌙 Ara Ara~ It's sleepy hours, but LUFFY's still awake to guard your files! 🛌👒")
+        asyncio.create_task(auto_clean(client, sleepy_msg))
 
     # Boot animation setup
-  #  progress = await message.reply("👒 Booting LUFFY File Core...")
-
     boot_sequences = [
-    [
-        "🧭 Setting Sail from East Blue...",
-        "🔍 Scouting the Grand Line routes...",
-        "🏴‍☠️ Crew check done! Straw Hat systems online!",
-        "✅ LUFFY IS READY FOR ADVENTURE! ☠️"
-    ],
-    [
-        "⚙️ Activating Gear 2...",
-        "💨 Speeding up Straw Hat Systems...",
-        "✅ LUFFY READY TO FIGHT! 💥"
-    ],
-
-    [
-        "⚙️ Gear 4: Boundman Engaged...",
-        "🔄 Recoil Boost Active...",
-        "✅ LET'S GO, CREW! 🔥"
-    ],
-    [
-        "⚙️ Gear 5: Nika Mode Loading...",
-        "🌟 Drums of Liberation echo...",
-        "✅ LUFFY IS IN FULL SWING! 🌀"
-    ],
-    [
-        "🌊 Calling Thousand Sunny...",
-        "🎩 Checking Straw Hat integrity...",
-        "✅ LUFFY CREW DEPLOYED! 💫"
-    ],
-    [
-        "⚓ Deploying haki across channels...",
-        "🌀 Summoning LUFFY clones...",
-        "✅ SHISHISHI~ Let's make some trouble! 😎"
-    ],
-    [
-        "🔧 FRANKY’s loading Cola Energy...",
-        "🚀 Docking LUFFY-Bot Systems...",
-        "✅ SUPER BOOT COMPLETE! 🤖"
-    ],
-    [
-        "🔥 SANJI’s Kitchen Prepping...",
-        "🥘 Diable Jambe Cooking in Progress...",
-        "✅ STRAW HATS FED AND READY! 🍖"
-    ],
-    [
-        "🗡️ ZORO is sharpening his blades...",
-        "🌪️ Santoryu Mode Activated...",
-        "✅ NO ONE GETS LOST THIS TIME! 😤"
+        [
+            "🧭 Setting Sail from East Blue...",
+            "🔍 Scouting the Grand Line routes...",
+            "🏴‍☠️ Crew check done! Straw Hat systems online!",
+            "✅ LUFFY IS READY FOR ADVENTURE! ☠️"
+        ],
+        [
+            "⚙️ Activating Gear 2...",
+            "💨 Speeding up Straw Hat Systems...",
+            "✅ LUFFY READY TO FIGHT! 💥"
+        ],
+        [
+            "⚙️ Gear 4: Boundman Engaged...",
+            "🔄 Recoil Boost Active...",
+            "✅ LET'S GO, CREW! 🔥"
+        ],
+        [
+            "⚙️ Gear 5: Nika Mode Loading...",
+            "🌟 Drums of Liberation echo...",
+            "✅ LUFFY IS IN FULL SWING! 🌀"
+        ],
+        [
+            "🌊 Calling Thousand Sunny...",
+            "🎩 Checking Straw Hat integrity...",
+            "✅ LUFFY CREW DEPLOYED! 💫"
+        ],
+        [
+            "⚓ Deploying haki across channels...",
+            "🌀 Summoning LUFFY clones...",
+            "✅ SHISHISHI~ Let's make some trouble! 😎"
+        ],
+        [
+            "🔧 FRANKY's loading Cola Energy...",
+            "🚀 Docking LUFFY-Bot Systems...",
+            "✅ SUPER BOOT COMPLETE! 🤖"
+        ],
+        [
+            "🔥 SANJI's Kitchen Prepping...",
+            "🥘 Diable Jambe Cooking in Progress...",
+            "✅ STRAW HATS FED AND READY! 🍖"
+        ],
+        [
+            "🗡️ ZORO is sharpening his blades...",
+            "🌪️ Santoryu Mode Activated...",
+            "✅ NO ONE GETS LOST THIS TIME! 😤"
+        ]
     ]
-]
-
-
 
     steps = random.choice(boot_sequences)
 
@@ -163,7 +172,7 @@ async def unified_start(client: Client, message: Message):
         progress = await message.reply("👒 Booting LUFFY File Core...")
     except Exception as e:
         print(f"Error sending boot message: {e}")
-        return  # Stop execution if message fails
+        return
 
     # Loop through each step safely
     for step in steps:
@@ -222,7 +231,6 @@ async def unified_start(client: Client, message: Message):
         await temp_msg.delete()
         track_msgs = []
 
-
         for msg in messages:
             caption = CUSTOM_CAPTION.format(previouscaption="" if not msg.caption else msg.caption.html,
                                             filename=msg.document.file_name) if bool(CUSTOM_CAPTION) and msg.document else (msg.caption.html if msg.caption else "")
@@ -269,13 +277,7 @@ async def unified_start(client: Client, message: Message):
             ]
         ]
     )
-        # Send the wait message first
-    WAIT_MSG = random.choice(WAIT_MSGS)
-    msg = await client.send_message(chat_id=message.chat.id, text=WAIT_MSG)
 
-
-    # Optional: Delay slightly before sending START_MSG (just for smoother pacing)
-    await asyncio.sleep(1)
     if START_PIC:
         msg = await message.reply_photo(
             photo=random.choice(PICS),
@@ -302,41 +304,15 @@ async def unified_start(client: Client, message: Message):
             disable_web_page_preview=True,
             quote=True
         )
+    
     if AUTO_CLEAN:
-        await asyncio.sleep(DELETE_DELAY)
-        await wait.delete()
-        await msg.delete()
-
-    # Auto-delete after configured delay if enabled
-
-
-
-WAIT_MSGS = [
-	    """<b><blockquote>Oi, hold on a sec! I’m out here fighting Kaido... but I’ll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
-	    """<b><blockquote>Gomu Gomu no wait! 🍩 Luffy’s gonna get to you in a bit, just give me a second!</blockquote></b>""",
-	    """<b><blockquote>Wanna see a pirate's patience? You gotta wait just a bit... Trust me, the treasure's coming! 🏝️</blockquote></b>""",
-	    """<b><blockquote>Ha! Even a pirate king needs a break! Hang tight, the loot will be here soon! 🍖🍻</blockquote></b>""",
-	    """<b><blockquote>Luffy’s busy flexing his muscles, but don’t worry! You’ll get what you want in a second! 💪</blockquote></b>""",
-	    """<b><blockquote>Gomu Gomu no patience! Hold tight, I’ll bring the treasure to you in no time! ⚔️🍖</blockquote></b>""",
-	    """<b><blockquote>Just a few more seconds! I’m busy with the crew, but I promise the reward will be worth it! 🚢</blockquote></b>""",
-	    """<b><blockquote>I’m still in the middle of a crazy adventure! Give me a second, and I’ll be right with you! 🍉</blockquote></b>""",
-	    """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
-	    """<b><blockquote>Patience, my friend! I’m off to find the One Piece, but I’ll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
-	]
-
-
-# =====================================================================================##
-
-
+        asyncio.create_task(auto_clean(client, msg))
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
-# =====================================================================================##
-
-
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
 async def get_users(client: Bot, message: Message):
-    msg = await client.send_message(chat_id=message.chat.id,text=random.choice(WAIT_MSGS))
+    msg = await client.send_message(chat_id=message.chat.id, text=random.choice(WAIT_MSGS))
     users = await full_userbase()
     await msg.edit(f"{len(users)} users are using this bot")
 
@@ -380,9 +356,7 @@ Deleted Accounts: <code>{deleted}</code>
 Unsuccessful: <code>{unsuccessful}</code></b>"""
 
         return await pls_wait.edit(status)
-
     else:
         msg = await message.reply(REPLY_ERROR)
         await asyncio.sleep(8)
         await msg.delete()
-
