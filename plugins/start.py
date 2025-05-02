@@ -301,8 +301,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            disable_web_page_preview=True,
-            quote=True
+            message_effect_id=5104841245755180589)  # ⚡
         )
     
     if AUTO_CLEAN:
