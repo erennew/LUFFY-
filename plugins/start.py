@@ -301,9 +301,10 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5104841245755180589)  # ⚡
+            message_effect_id=5104841245755180589  # ⚡
         )
-    
+        
+
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
 
