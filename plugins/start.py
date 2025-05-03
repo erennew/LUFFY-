@@ -289,7 +289,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            quote=True
+            message_effect_id=5104841245755180589  # ⚡
         )
     else:
         msg = await message.reply_text(
