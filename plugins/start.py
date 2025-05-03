@@ -271,7 +271,7 @@ async def unified_start(client: Client, message: Message):
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
         return
 
-    # No encoded file - show greeting UI
+     # No encoded file - show greeting UI
     reply_markup = InlineKeyboardMarkup(
         [
             [
@@ -282,7 +282,6 @@ async def unified_start(client: Client, message: Message):
     )
 
     if START_PIC:
-    # Cannot use message_effect_id here!
         msg = await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
@@ -294,7 +293,7 @@ async def unified_start(client: Client, message: Message):
             ),
             reply_markup=reply_markup
         )
-     else:
+    else:
         try:
             effect_id = 5104841245755180586  # ⚡ Working effect ID
             msg = await message.reply_text(
@@ -323,6 +322,7 @@ async def unified_start(client: Client, message: Message):
 
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
+
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
