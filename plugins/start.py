@@ -15,7 +15,10 @@ from helper_func import subscribed, decode, get_messages, delete_file
 from database.database import add_user, del_user, full_userbase, present_user
 from datetime import datetime, timedelta
 from config import DELETE_DELAY, AUTO_CLEAN
-
+from pyrogram import Client, filters, __version__
+from pyrogram.enums import ParseMode, ChatAction
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, ChatInviteLink, ChatPrivileges
+from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 WAIT_MSGS = [
     """<b><blockquote>Oi, hold on a sec! I'm out here fighting Kaido... but I'll get to you after I win this fight! 🏴‍☠️</blockquote></b>""",
     """<b><blockquote>Gomu Gomu no wait! 🍩 Luffy's gonna get to you in a bit, just give me a second!</blockquote></b>""",
