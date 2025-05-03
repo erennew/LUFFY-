@@ -58,3 +58,45 @@ async def link_generator(client: Client, message: Message):
     link = f"https://t.me/{client.username}?start={base64_string}"
     reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
     await channel_message.reply_text(f"<b><blockquote>Here is your link</blockquote></b>\n\n<blockquote>{link}</blockquote>", quote=True, reply_markup=reply_markup)
+
+@Bot.on_message(filters.private & admin & filters.command("custom_batch"))
+async def custom_batch(client: Client, message: Message):
+    collected = []
+    STOP_KEYBOARD = ReplyKeyboardMarkup([["STOP"]], resize_keyboard=True)
+
+    await message.reply("Send all messages you want to include in batch.\n\nPress STOP when you're done.", reply_markup=STOP_KEYBOARD)
+
+    while True:
+        try:
+            user_msg = await client.ask(
+                chat_id=message.chat.id,
+                text="Waiting for files/messages...\nPress STOP to finish.",
+                timeout=60
+            )
+        except asyncio.TimeoutError:
+            break
+
+        if user_msg.text and user_msg.text.strip().upper() == "STOP":
+            break
+
+        try:
+            sent = await user_msg.copy(client.db_channel.id, disable_notification=True)
+            collected.append(sent.id)
+        except Exception as e:
+            await message.reply(f"❌ Failed to store a message:\n<code>{e}</code>")
+            continue
+
+    await message.reply("✅ Batch collection complete.", reply_markup=ReplyKeyboardRemove())
+
+    if not collected:
+        await message.reply("❌ No messages were added to batch.")
+        return
+
+    start_id = collected[0] * abs(client.db_channel.id)
+    end_id = collected[-1] * abs(client.db_channel.id)
+    string = f"get-{start_id}-{end_id}"
+    base64_string = await encode(string)
+    link = f"https://t.me/{client.username}?start={base64_string}"
+
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton("🔁 Share URL", url=f'https://telegram.me/share/url?url={link}')]])
+    await message.reply(f"<b>Here is your custom batch link:</b>\n\n{link}", reply_markup=reply_markup)
