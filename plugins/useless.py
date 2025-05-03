@@ -7,8 +7,10 @@ from helper_func import get_readable_time
 import time
 import psutil
 import asyncio
+# Admin filter for convenience
+admin = filters.user(ADMINS)
 
-@Bot.on_message(filters.command('stats') & filters.user(ADMINS))  # Only admins allowed to use /stats
+@Bot.on_message(filters.command('stats') & admin)  # Only admins allowed to use /stats
 async def stats(bot: Bot, message: Message):
     now = datetime.now()
     delta = now - bot.uptime
@@ -28,20 +30,17 @@ async def stats(bot: Bot, message: Message):
 
     # Formatting the stats text
     stats_text = f"""
-    <b>Bot Stats:</b>
-    <b>Uptime:</b> {uptime}
-    <b>Ping:</b> {ping}ms
-    <b>Memory Usage:</b> {memory_usage}
-    <b>CPU Usage:</b> {cpu_usage}
-    <b>Last Fetched:</b> {now.strftime('%Y-%m-%d %H:%M:%S')}
-    """
+<b>Bot Stats:</b>
+<b>Uptime:</b> {uptime}
+<b>Ping:</b> {ping}ms
+<b>Memory Usage:</b> {memory_usage}
+<b>CPU Usage:</b> {cpu_usage}
+<b>Last Fetched:</b> {now.strftime('%Y-%m-%d %H:%M:%S')}
+"""
 
-    # Send the stats message
     await ping_response.edit(stats_text)
 
-    # Auto-delete the message after the configured DELETE_DELAY time
-    
-
+    # Auto-delete the message after DELETE_DELAY seconds
     await asyncio.sleep(DELETE_DELAY)
     await ping_response.delete()
 
