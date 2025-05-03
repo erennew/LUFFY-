@@ -1,10 +1,12 @@
-#(©) WeekendsBotz
-
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from bot import Bot
 from config import ADMINS
 from helper_func import encode, get_message_id
+import asyncio  # Don't forget this if not already imported
+
+admin = filters.user(ADMINS)  # ✅ This is required
+
 
 @Bot.on_message(filters.private & filters.user(ADMINS) & filters.command('batch'))
 async def batch(client: Client, message: Message):
