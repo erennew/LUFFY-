@@ -75,19 +75,31 @@ async def unified_start(client: Client, message: Message):
 
     # Check subscription status
     if not await subscribed(client, message):
-        # Create invite links before using them
         invite1, invite2, invite3, invite4 = await create_invite_links(client)
-
         buttons = [
             [
-                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite1.invite_link),
-                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite2.invite_link),
+                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ 1", url=invite1.invite_link),
+                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 2 •", url=invite2.invite_link)
             ],
             [
-                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite3.invite_link),
-                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite4.invite_link),
+                InlineKeyboardButton(text="• ᴄʜᴀɴɴᴇʟ 3", url=invite3.invite_link),
+                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 4 •", url=invite4.invite_link)
+            ],
+            [
+                InlineKeyboardButton("♻️ Try Again", url=f"https://t.me/{client.username}?start={message.command[1] if len(message.command) > 1 else ''}")
             ]
         ]
+
+        msg = await message.reply_photo(
+            photo=FORCE_PIC,
+            caption=FORCE_MSG.format(mention=message.from_user.mention),
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+
+        if AUTO_CLEAN:
+            asyncio.create_task(auto_clean(client, msg))
+        return
+
 
         if FORCE_PIC:
             msg = await message.reply_photo(
@@ -281,13 +293,13 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-    if START_PIC:
+        if START_PIC:
         msg = await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
+                username=f"@{message.from_user.username}" if message.from_user.username else None,
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
@@ -295,17 +307,16 @@ async def unified_start(client: Client, message: Message):
         )
     else:
         try:
-            effect_id = 5104841245755180586  # ⚡ Working effect ID
             msg = await message.reply_text(
                 text=START_MSG.format(
                     first=message.from_user.first_name,
                     last=message.from_user.last_name,
-                    username=None if not message.from_user.username else '@' + message.from_user.username,
+                    username=f"@{message.from_user.username}" if message.from_user.username else None,
                     mention=message.from_user.mention,
                     id=message.from_user.id
                 ),
                 reply_markup=reply_markup,
-                message_effect_id=effect_id
+                message_effect_id=5104841245755180586  # ✅ Valid effect ID
             )
         except Exception as e:
             print(f"[!] Message effect failed: {e}")
@@ -313,7 +324,7 @@ async def unified_start(client: Client, message: Message):
                 text=START_MSG.format(
                     first=message.from_user.first_name,
                     last=message.from_user.last_name,
-                    username=None if not message.from_user.username else '@' + message.from_user.username,
+                    username=f"@{message.from_user.username}" if message.from_user.username else None,
                     mention=message.from_user.mention,
                     id=message.from_user.id
                 ),
