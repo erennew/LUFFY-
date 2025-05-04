@@ -76,6 +76,17 @@ async def unified_start(client: Client, message: Message):
     # Check subscription status
     if not await subscribed(client, message):
         invite1, invite2, invite3, invite4 = await create_invite_links(client)
+    
+        # Extract invite links safely
+        link1 = getattr(invite1, 'invite_link', invite1)
+        link2 = getattr(invite2, 'invite_link', invite2)
+        link3 = getattr(invite3, 'invite_link', invite3)
+        link4 = getattr(invite4, 'invite_link', invite4)
+    
+        # Safe fallback values
+        username = client.username or "YourBotUsername"
+        command_arg = message.command[1] if hasattr(message, "command") and len(message.command) > 1 else ""
+    
         buttons = [
             [
                 InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ 1", url=link1),
@@ -92,13 +103,14 @@ async def unified_start(client: Client, message: Message):
                 )
             ]
         ]
-
-
+    
         msg = await message.reply_photo(
             photo=FORCE_PIC,
             caption=FORCE_MSG.format(mention=message.from_user.mention),
             reply_markup=InlineKeyboardMarkup(buttons)
         )
+        return  # stop here if not subscribed
+
 
         if AUTO_CLEAN:
             asyncio.create_task(auto_clean(client, msg))
