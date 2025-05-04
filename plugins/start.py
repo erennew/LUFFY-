@@ -78,17 +78,21 @@ async def unified_start(client: Client, message: Message):
         invite1, invite2, invite3, invite4 = await create_invite_links(client)
         buttons = [
             [
-                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ 1", url=invite1.invite_link),
-                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 2 •", url=invite2.invite_link)
+                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ 1", url=link1),
+                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 2 •", url=link2)
             ],
             [
-                InlineKeyboardButton(text="• ᴄʜᴀɴɴᴇʟ 3", url=invite3.invite_link),
-                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 4 •", url=invite4.invite_link)
+                InlineKeyboardButton(text="• ᴄʜᴀɴɴᴇʟ 3", url=link3),
+                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 4 •", url=link4)
             ],
             [
-                InlineKeyboardButton("♻️ Try Again", url=f"https://t.me/{client.username}?start={message.command[1] if len(message.command) > 1 else ''}")
+                InlineKeyboardButton(
+                    "♻️ Try Again",
+                    url=f"https://t.me/{username}?start={command_arg}"
+                )
             ]
         ]
+
 
         msg = await message.reply_photo(
             photo=FORCE_PIC,
