@@ -75,42 +75,29 @@ async def unified_start(client: Client, message: Message):
 
     # Check subscription status
     if not await subscribed(client, message):
+        # Create invite links before using them
         invite1, invite2, invite3, invite4 = await create_invite_links(client)
-    
-        # Extract invite links safely
-        link1 = getattr(invite1, 'invite_link', invite1)
-        link2 = getattr(invite2, 'invite_link', invite2)
-        link3 = getattr(invite3, 'invite_link', invite3)
-        link4 = getattr(invite4, 'invite_link', invite4)
-    
-        # Safe fallback values
-        username = client.username or "YourBotUsername"
-        command_arg = message.command[1] if hasattr(message, "command") and len(message.command) > 1 else ""
-    
+
         buttons = [
             [
-                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ 1", url=link1),
-                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 2 •", url=link2)
+                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite1.invite_link),
+                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite2.invite_link),
             ],
             [
-                InlineKeyboardButton(text="• ᴄʜᴀɴɴᴇʟ 3", url=link3),
-                InlineKeyboardButton(text="ᴄʜᴀɴɴᴇʟ 4 •", url=link4)
-            ],
-            [
-                InlineKeyboardButton(
-                    "♻️ Try Again",
-                    url=f"https://t.me/{username}?start={command_arg}"
-                )
+                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite3.invite_link),
+                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite4.invite_link),
             ]
         ]
-    
-        msg = await message.reply_photo(
-            photo=FORCE_PIC,
-            caption=FORCE_MSG.format(mention=message.from_user.mention),
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-        return  # stop here if not subscribed
-
+        try:
+            buttons.append([
+                InlineKeyboardButton(
+                    "🌟 Click Here After Joining",
+                    url=f"https://t.me/{client.username}?start={message.command[1]}"
+                )
+            ])
+        except IndexError:
+            pass
+            
 
         if AUTO_CLEAN:
             asyncio.create_task(auto_clean(client, msg))
