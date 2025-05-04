@@ -86,18 +86,14 @@ async def unified_start(client: Client, message: Message):
             [
                 InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite3.invite_link),
                 InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite4.invite_link),
-            ]
-        ]
-    
-        try:
-            buttons.append([
+            ],
+            [
                 InlineKeyboardButton(
                     "🌟 Click Here After Joining",
-                    url=f"https://t.me/{client.username}?start={message.command[1]}"
+                    url=f"https://t.me/{client.username}?start=verify"
                 )
-            ])
-        except IndexError:
-            pass
+            ]
+        ]
     
         # Send the force-sub message (photo or text)
         if FORCE_PIC:
@@ -117,7 +113,6 @@ async def unified_start(client: Client, message: Message):
             asyncio.create_task(auto_clean(client, msg))
     
         return  # Stop execution here if not subscribed
-
     # If the user is new, add to DB
     if not await present_user(user_id):
         with contextlib.suppress(Exception):
