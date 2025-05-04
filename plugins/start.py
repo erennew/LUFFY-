@@ -297,10 +297,23 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-        if START_PIC:
-        msg = await message.reply_photo(
-            photo=random.choice(PICS),
-            caption=START_MSG.format(
+if START_PIC:
+    msg = await message.reply_photo(
+        photo=random.choice(PICS),
+        caption=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name,
+            username=f"@{message.from_user.username}" if message.from_user.username else None,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup,
+        message_effect_id=5104841245755180586
+    )
+else:
+    try:
+        msg = await message.reply_text(
+            text=START_MSG.format(
                 first=message.from_user.first_name,
                 last=message.from_user.last_name,
                 username=f"@{message.from_user.username}" if message.from_user.username else None,
@@ -308,33 +321,20 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5104841245755180586
+            message_effect_id=5104841245755180586  # ✅ Valid effect ID
         )
-    else:
-        try:
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=5104841245755180586  # ✅ Valid effect ID
-            )
-        except Exception as e:
-            print(f"[!] Message effect failed: {e}")
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup
-            )
+    except Exception as e:
+        print(f"[!] Message effect failed: {e}")
+        msg = await message.reply_text(
+            text=START_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name,
+                username=f"@{message.from_user.username}" if message.from_user.username else None,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=reply_markup
+        )
 
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
