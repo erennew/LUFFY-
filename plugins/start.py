@@ -77,7 +77,7 @@ async def unified_start(client: Client, message: Message):
     if not await subscribed(client, message):
         # Create invite links before using them
         invite1, invite2, invite3, invite4 = await create_invite_links(client)
-
+    
         buttons = [
             [
                 InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite1.invite_link),
@@ -88,6 +88,7 @@ async def unified_start(client: Client, message: Message):
                 InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite4.invite_link),
             ]
         ]
+    
         try:
             buttons.append([
                 InlineKeyboardButton(
@@ -97,13 +98,8 @@ async def unified_start(client: Client, message: Message):
             ])
         except IndexError:
             pass
-            
-
-        if AUTO_CLEAN:
-            asyncio.create_task(auto_clean(client, msg))
-        return
-
-
+    
+        # Send the force-sub message (photo or text)
         if FORCE_PIC:
             msg = await message.reply_photo(
                 photo=FORCE_PIC,
@@ -115,10 +111,12 @@ async def unified_start(client: Client, message: Message):
                 text=FORCE_MSG.format(mention=message.from_user.mention),
                 reply_markup=InlineKeyboardMarkup(buttons)
             )
-        
+    
+        # Clean message if enabled
         if AUTO_CLEAN:
             asyncio.create_task(auto_clean(client, msg))
-        return
+    
+        return  # Stop execution here if not subscribed
 
     # If the user is new, add to DB
     if not await present_user(user_id):
