@@ -37,13 +37,13 @@ FORCE_SUB_CHANNEL_2 = int(os.environ.get("FORCE_SUB_CHANNEL_2", "-1002331321194"
 FORCE_SUB_CHANNEL_3 = int(os.environ.get("FORCE_SUB_CHANNEL_3", "-1002523495959"))
 FORCE_SUB_CHANNEL_4 = int(os.environ.get("FORCE_SUB_CHANNEL_4", "-1002508438247"))
 
-TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "4"))
+TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "8"))
 TIME_WINDOW = int(os.getenv("TIME_WINDOW", 60))  # e.g. 60 seconds
-MAX_REQUESTS = int(os.getenv("MAX_REQUESTS", 5))  # e.g. 3 requests per TIME_WINDOW
+MAX_REQUESTS = int(os.getenv("MAX_REQUESTS", 10))  # e.g. 3 requests per TIME_WINDOW
 AUTO_CLEAN = bool(os.getenv("AUTO_CLEAN", True))
 DELETE_DELAY = int(os.getenv("DELETE_DELAY", 10))  # Time in seconds
 #start message
-START_PIC = os.environ.get("START_PIC","")
+START_PIC = os.environ.get("START_PIC","https://i.ibb.co/8nJR2BPX/x.jpg")
 START_MSG = os.environ.get(
     "START_MESSAGE",
     "👒 Oi oi, {mention}!\n\n<blockquote>LUFFY here! Got a secret map from @CulturedTeluguweeb? I’ll grab that anime treasure faster than Sanji serves dinner! 🍜🏴‍☠️</blockquote>"
@@ -56,7 +56,7 @@ except ValueError:
         raise Exception("Your Admins list does not contain valid integers.")
 
 #Force sub message 
-FORCE_PIC = os.environ.get("FORCE_PIC", "")
+FORCE_PIC = os.environ.get("FORCE_PIC", "https://i.ibb.co/39pdz7yv/x.jpg")
 
 FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "ᴀʀᴀ ᴀʀᴀ!! {mention}\n\n<b><blockquote>ᴀʀᴀ ʏᴏᴜ'ʀᴇ ᴍɪssɪɴɢ ᴏᴜᴛ ᴏɴ sᴏᴍᴇ sᴇʀɪᴏᴜs ᴀᴄᴛɪᴏɴ.ᴛo ᴜɴʟᴏᴄᴋ ᴀʟʟ ғᴇᴀᴛᴜʀᴇs ᴀɴᴅ ᴀᴄᴄᴇss ғɪʟᴇs, ᴊᴏɪɴ ᴀʟʟ of ᴏᴜʀ ᴄʜᴀɴɴᴇʟs ʙᴇʟᴏᴡ: !</blockquote></b>")
 
@@ -64,7 +64,7 @@ FORCE_MSG = os.environ.get("FORCE_SUB_MESSAGE", "ᴀʀᴀ ᴀʀᴀ!! {mention}\n
 CUSTOM_CAPTION = os.environ.get("CUSTOM_CAPTION","<b><blockquote>• ᴘᴏᴡᴇʀᴇᴅ ʙʏ @Culturedteluguweeb</blockquote></b>")
 
 #Collection of pics for Bot // #Optional but atleast one pic link should be replaced if you don't want predefined links
-PICS = (os.environ.get("PICS", "https://envs.sh/sJX.jpg https://envs.sh/Uc0.jpg https://envs.sh/UkA.jpg https://envs.sh/Uk_.jpg https://envs.sh/Ukc.jpg https://envs.sh/UkZ.jpg https://envs.sh/UkK.jpg")).split() #Required
+PICS = (os.environ.get("PICS", "https://i.ibb.co/Kx5mS6V5/x.jpg https://i.ibb.co/5g5sp5Ym/x.jpg https://i.ibb.co/jZQHRzKv/x.jpg https://i.ibb.co/LVr25qr/x.jpg https://i.ibb.co/PvB2DVHQ/x.jpg https://i.ibb.co/cSYRkdz6/x.jpg https://i.ibb.co/FjwYKW9/x.jpg")).split() #Required
 #set True if you want to prevent users from forwarding files from bot
 PROTECT_CONTENT = False if os.environ.get('PROTECT_CONTENT', "True") == "True" else False
 
