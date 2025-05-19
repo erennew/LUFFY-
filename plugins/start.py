@@ -62,16 +62,16 @@ user_rate_limit = {}
 async def unified_start(client: Client, message: Message):
     user_id = message.from_user.id
     
-  """  # Rate limit check
-    now = time.time()
-    reqs = user_rate_limit.get(user_id, [])
-    reqs = [t for t in reqs if now - t < TIME_WINDOW]
-    if len(reqs) >= MAX_REQUESTS:
-        wait_time = int(TIME_WINDOW - (now - reqs[0]))
-        return await message.reply(f"⚠️ Slow down, nakama! You're too fast for LUFFY! Wait a bit and try again~ 💤\n\nTry again in <b>{wait_time}</b> seconds. 🐢")
-        asyncio.create_task(auto_clean(client, sleepy_msg))
-    reqs.append(now)
-    user_rate_limit[user_id] = reqs """
+    # Rate limit check
+        """    now = time.time()
+        reqs = user_rate_limit.get(user_id, [])
+        reqs = [t for t in reqs if now - t < TIME_WINDOW]
+        if len(reqs) >= MAX_REQUESTS:
+            wait_time = int(TIME_WINDOW - (now - reqs[0]))
+            return await message.reply(f"⚠️ Slow down, nakama! You're too fast for LUFFY! Wait a bit and try again~ 💤\n\nTry again in <b>{wait_time}</b> seconds. 🐢")
+            asyncio.create_task(auto_clean(client, sleepy_msg))
+        reqs.append(now)
+        user_rate_limit[user_id] = reqs """
     now = time.time()
     reqs = user_rate_limit.get(user_id, [])
     reqs = [t for t in reqs if now - t < TIME_WINDOW]
