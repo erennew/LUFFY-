@@ -69,11 +69,11 @@ class Bot(Client):
         except Exception as e:
             self.LOGGER(__name__).warning(e)
             self.LOGGER(__name__).warning(f"Check DB Channel (CHANNEL_ID={CHANNEL_ID}) and ensure bot is admin.")
-            self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/weebs_support for support")
+            self.LOGGER(__name__).info("\nBot Stopped. Join https://t.me/+IIgB6RgivTI2NzA1 for support")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/WeekendsBotz")
+        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/CulturedTeluguweeb")
         self.LOGGER(__name__).info(r"""       
   ┈┈┈╱▔▔▔▔▔▔╲┈╭━━━━━━━╮┈┈
 ┈┈▕┈╭━╮╭━╮┈▏┃RAVIBOTS
