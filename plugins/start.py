@@ -442,7 +442,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            #message_effect_id=5104841245755180586
+            message_effect_id=5104841245755180587  # ⚡ Thunder effect
         )
     else:
         try:
@@ -455,7 +455,7 @@ async def unified_start(client: Client, message: Message):
                     id=message.from_user.id
                 ),
                 reply_markup=reply_markup,
-                #message_effect_id=5104841245755180586
+                message_effect_id=5104841245755180587  # ⚡ Thunder effect
             )
         except Exception as e:
             print(f"[!] Message effect failed: {e}")
