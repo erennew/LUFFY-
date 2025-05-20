@@ -424,9 +424,7 @@ async def unified_start(client: Client, message: Message):
         return
     
         # After boot animation and file handling code...
-    
-    # No encoded file - show greeting UI
-        # No encoded file - show greeting UI
+      # No encoded file - show greeting UI
         reply_markup = InlineKeyboardMarkup(
             [
                 [
@@ -436,44 +434,44 @@ async def unified_start(client: Client, message: Message):
             ]
         )
        # Get a random effect ID from your predefined list
-    effect_id = random.choice(list(EFFECT_IDS.values()))
-    
-    try:
-        if START_PIC:
-            # Photo message with effect
-            msg = await message.reply_photo(
-                photo=random.choice(PICS),
-                caption=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name or '',  # Handle None case
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=effect_id
-            )
-        else:
-            # Text message with same effect
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name or '',  # Handle None case
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=effect_id
-            )
-    
-        if AUTO_CLEAN:
-            # Schedule auto-cleanup without awaiting
-            asyncio.create_task(auto_clean(client, msg))
-    
-    except Exception as e:
-        print(f"Message sending failed: {e}")
-    # Consider adding retry logic here if needed
+        effect_id = random.choice(list(EFFECT_IDS.values()))
+        
+        try:
+            if START_PIC:
+                # Photo message with effect
+                msg = await message.reply_photo(
+                    photo=random.choice(PICS),
+                    caption=START_MSG.format(
+                        first=message.from_user.first_name,
+                        last=message.from_user.last_name or '',  # Handle None case
+                        username=f"@{message.from_user.username}" if message.from_user.username else None,
+                        mention=message.from_user.mention,
+                        id=message.from_user.id
+                    ),
+                    reply_markup=reply_markup,
+                    message_effect_id=effect_id
+                )
+            else:
+                # Text message with same effect
+                msg = await message.reply_text(
+                    text=START_MSG.format(
+                        first=message.from_user.first_name,
+                        last=message.from_user.last_name or '',  # Handle None case
+                        username=f"@{message.from_user.username}" if message.from_user.username else None,
+                        mention=message.from_user.mention,
+                        id=message.from_user.id
+                    ),
+                    reply_markup=reply_markup,
+                    message_effect_id=effect_id
+                )
+        
+            if AUTO_CLEAN:
+                # Schedule auto-cleanup without awaiting
+                asyncio.create_task(auto_clean(client, msg))
+        
+        except Exception as e:
+            print(f"Message sending failed: {e}")
+        # Consider adding retry logic here if needed
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
