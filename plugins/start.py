@@ -425,47 +425,49 @@ async def unified_start(client: Client, message: Message):
     
         # After boot animation and file handling code...
  # Default start message
-     reply_markup = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton("📜 Pirate Log", callback_data="about"),
-                    InlineKeyboardButton("🗺️ Close Map", callback_data="close")
-                ]
-            ]
-        )
-        
-        # Pick a random effect ID
-        effect_id = random.choice(list(EFFECT_IDS))
-        
-        if START_PIC:
-            # Send without message_effect_id for photo (it causes EFFECT_ID_INVALID)
-            msg = await message.reply_photo(
-                photo=random.choice(PICS),
-                caption=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name or '',
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup
-            )
-        else:
-            # Send with effect ID only for text messages
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name or '',
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=effect_id
-            )
-        
-        if AUTO_CLEAN:
-            asyncio.create_task(auto_clean(client, msg))
+    reply_markup = InlineKeyboardMarkup(
+    [
+        [
+            InlineKeyboardButton("📜 Pirate Log", callback_data="about"),
+            InlineKeyboardButton("🗺️ Close Map", callback_data="close")
+        ]
+    ]
+)
+
+# Pick a random effect ID from your EFFECT_IDS set
+effect_id = random.choice(list(EFFECT_IDS))
+
+# Reply with photo or text depending on START_PIC
+if START_PIC:
+    msg = await message.reply_photo(
+        photo=random.choice(PICS),
+        caption=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name or '',
+            username=f"@{message.from_user.username}" if message.from_user.username else None,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup
+        # ❌ Do NOT include message_effect_id for photos — causes ERROR 400
+    )
+else:
+    msg = await message.reply_text(
+        text=START_MSG.format(
+            first=message.from_user.first_name,
+            last=message.from_user.last_name or '',
+            username=f"@{message.from_user.username}" if message.from_user.username else None,
+            mention=message.from_user.mention,
+            id=message.from_user.id
+        ),
+        reply_markup=reply_markup,
+        message_effect_id=effect_id  # ✅ Only works with text
+    )
+
+# Clean up message if needed
+if AUTO_CLEAN:
+    asyncio.create_task(auto_clean(client, msg))
+
       
 
 
