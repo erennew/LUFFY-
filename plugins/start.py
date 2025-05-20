@@ -433,35 +433,63 @@ async def unified_start(client: Client, message: Message):
             ]
         ]
     )
-    effect_id = random.choice(list(EFFECT_IDS))
+   effect_id = random.choice(list(EFFECT_IDS.values()))
+
+try:
     if START_PIC:
-    msg = await message.reply_photo(
-    photo=random.choice(PICS),
-    caption=START_MSG.format(
-    first=message.from_user.first_name,
-    last=message.from_user.last_name or '',
-    username=f"@{message.from_user.username}" if message.from_user.username else None,
-    mention=message.from_user.mention,
-    id=message.from_user.id
-    ),
-    reply_markup=reply_markup,
-    message_effect_id=effect_id
-    )
+        msg = await message.reply_photo(
+            photo=random.choice(PICS),
+            caption=START_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name or '',
+                username=f"@{message.from_user.username}" if message.from_user.username else None,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=reply_markup,
+            message_effect_id=effect_id
+        )
     else:
-    msg = await message.reply_text(
-    text=START_MSG.format(
-    first=message.from_user.first_name,
-    last=message.from_user.last_name or '',
-    username=f"@{message.from_user.username}" if message.from_user.username else None,
-    mention=message.from_user.mention,
-    id=message.from_user.id
-    ),
-    reply_markup=reply_markup,
-    message_effect_id=effect_id
-    )
-        
+        msg = await message.reply_text(
+            text=START_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name or '',
+                username=f"@{message.from_user.username}" if message.from_user.username else None,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=reply_markup,
+            message_effect_id=effect_id
+        )
+except Exception as e:
+    # Fallback without effect if effect ID fails
+    if START_PIC:
+        msg = await message.reply_photo(
+            photo=random.choice(PICS),
+            caption=START_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name or '',
+                username=f"@{message.from_user.username}" if message.from_user.username else None,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=reply_markup
+        )
+    else:
+        msg = await message.reply_text(
+            text=START_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name or '',
+                username=f"@{message.from_user.username}" if message.from_user.username else None,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=reply_markup
+        )
+
 if AUTO_CLEAN:
-asyncio.create_task(auto_clean(client, msg))
+    asyncio.create_task(auto_clean(client, msg))
+
 
     
 
