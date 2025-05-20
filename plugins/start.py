@@ -31,14 +31,14 @@ WAIT_MSGS = [
     """<b><blockquote>I'm still in the middle of a crazy adventure! Give me a second, and I'll be right with you! 🍉</blockquote></b>""",
     """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
     """<b><blockquote>Patience, my friend! I'm off to find the One Piece, but I'll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
-]"""
-EFFECT_IDS = {
-     5381769629447862272,  # fire
-    5381769629447862273,  # poof
-    5381769629447862274,  # heart
-    5381769629447862275,  # thunder
-    5381769629447862276,  # confetti
-}"""
+]
+# EFFECT_IDS = {
+  #   5381769629447862272,  # fire
+   # 5381769629447862273,  # poof
+   # 5381769629447862274,  # heart
+    # 5381769629447862275,  # thunder
+    # 5381769629447862276,  # confetti
+}
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
         chat_id=FORCE_SUB_CHANNEL_1,
