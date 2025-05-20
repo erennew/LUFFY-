@@ -415,6 +415,7 @@ async def unified_start(client: Client, message: Message):
         # After boot animation and file handling code...
 
     # No encoded file - show greeting UI
+        # No encoded file - show greeting UI
     reply_markup = InlineKeyboardMarkup(
         [
             [
@@ -424,74 +425,32 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-    # Updated working effect IDs (July 2024)
-    EFFECT_IDS = {
-        "fire": 5381769629447862272,    # 🔥 
-        "poof": 5381769629447862273,    # ✨
-        "heart": 5381769629447862274,   # ❤️
-        "thunder": 5381769629447862275, # ⚡
-        "confetti": 5381769629447862276 # 🎉
-    }
-
-    try:
-        # Select random effect only for premium users
-        if message.from_user.is_premium:
-            effect_id = random.choice(list(EFFECT_IDS.values()))
-        else:
-            effect_id = None
-            
-        if START_PIC:
-            msg = await message.reply_photo(
-                photo=random.choice(PICS),
-                caption=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=effect_id
-            )
-        else:
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=effect_id
-            )
-
-    except BadRequest as e:
-        print(f"[!] Message effect failed: {e}")
-        # Fallback without effect
-        if START_PIC:
-            msg = await message.reply_photo(
-                photo=random.choice(PICS),
-                caption=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup
-            )
-        else:
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup
-            )
+    # Use the working effect ID from the other code
+    if START_PIC:
+        msg = await message.reply_photo(
+            photo=random.choice(PICS),
+            caption=START_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name,
+                username=None if not message.from_user.username else '@' + message.from_user.username,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=reply_markup,
+            message_effect_id=5104841245755180586  # Using the confirmed working effect ID
+        )
+    else:
+        msg = await message.reply_text(
+            text=START_MSG.format(
+                first=message.from_user.first_name,
+                last=message.from_user.last_name,
+                username=None if not message.from_user.username else '@' + message.from_user.username,
+                mention=message.from_user.mention,
+                id=message.from_user.id
+            ),
+            reply_markup=reply_markup,
+            message_effect_id=5104841245755180586  # Same effect for text
+        )
 
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
