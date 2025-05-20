@@ -433,39 +433,36 @@ async def unified_start(client: Client, message: Message):
             ]
         ]
     )
-
     effect_id = random.choice(list(EFFECT_IDS))
-        if START_PIC:
-            msg = await message.reply_photo(
-                photo=random.choice(PICS),
-                caption=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name or '',
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=effect_id
-            )
-        else:
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name or '',
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=effect_id
-            )
+    if START_PIC:
+    msg = await message.reply_photo(
+    photo=random.choice(PICS),
+    caption=START_MSG.format(
+    first=message.from_user.first_name,
+    last=message.from_user.last_name or '',
+    username=f"@{message.from_user.username}" if message.from_user.username else None,
+    mention=message.from_user.mention,
+    id=message.from_user.id
+    ),
+    reply_markup=reply_markup,
+    message_effect_id=effect_id
+    )
+    else:
+    msg = await message.reply_text(
+    text=START_MSG.format(
+    first=message.from_user.first_name,
+    last=message.from_user.last_name or '',
+    username=f"@{message.from_user.username}" if message.from_user.username else None,
+    mention=message.from_user.mention,
+    id=message.from_user.id
+    ),
+    reply_markup=reply_markup,
+    message_effect_id=effect_id
+    )
         
-        if AUTO_CLEAN:
-            asyncio.create_task(auto_clean(client, msg))
-    except Exception as e:
-        print(f"Final message error: {e}")
-        # Consider adding retry logic here if needed
+if AUTO_CLEAN:
+asyncio.create_task(auto_clean(client, msg))
+
     
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
