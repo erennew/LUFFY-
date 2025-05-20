@@ -23,14 +23,14 @@ CHANNEL_ID = int(os.environ.get("CHANNEL_ID", "-1002448203068"))
 OWNER_ID = int(os.environ.get("OWNER_ID", "1047253913"))
 
 #Port
-PORT = os.environ.get("PORT", "8001")
+PORT = os.environ.get("PORT", "8080")
 
 #Database 
-DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://chattaravikiran2001:6nJQC6pb3wLf1zCu@cluster1.daxfzgr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1")
-DB_NAME = os.environ.get("DATABASE_NAME", "Cluster1")
+DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://luffyravi2000:AfeOePR1ZVQLJL4P@cluster2.qbjobeq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2")
+DB_NAME = os.environ.get("DATABASE_NAME", "Cluster2")
 
 
-JOIN_REQUEST_ENABLE = os.environ.get("JOIN_REQUEST_ENABLED", None)
+JOIN_REQUEST_ENABLE = os.environ.get("JOIN_REQUEST_ENABLED", True)
 #force sub channel id, if you want enable force sub
 FORCE_SUB_CHANNEL_1 = int(os.environ.get("FORCE_SUB_CHANNEL_1", "-1002650862527"))
 FORCE_SUB_CHANNEL_2 = int(os.environ.get("FORCE_SUB_CHANNEL_2", "-1002331321194"))
@@ -39,9 +39,9 @@ FORCE_SUB_CHANNEL_4 = int(os.environ.get("FORCE_SUB_CHANNEL_4", "-1002508438247"
 
 TG_BOT_WORKERS = int(os.environ.get("TG_BOT_WORKERS", "8"))
 TIME_WINDOW = int(os.getenv("TIME_WINDOW", 60))  # e.g. 60 seconds
-MAX_REQUESTS = int(os.getenv("MAX_REQUESTS", 10))  # e.g. 3 requests per TIME_WINDOW
+MAX_REQUESTS = int(os.getenv("MAX_REQUESTS", 10))  # e.g. 10 requests per TIME_WINDOW
 AUTO_CLEAN = bool(os.getenv("AUTO_CLEAN", True))
-DELETE_DELAY = int(os.getenv("DELETE_DELAY", 10))  # Time in seconds
+DELETE_DELAY = int(os.getenv("DELETE_DELAY", 15))  # Time in seconds
 #start message
 START_PIC = os.environ.get("START_PIC","https://i.ibb.co/8nJR2BPX/x.jpg")
 START_MSG = os.environ.get(
@@ -70,7 +70,7 @@ PROTECT_CONTENT = False if os.environ.get('PROTECT_CONTENT', "True") == "True" e
 
 # Auto delete time in seconds.
 # Auto delete time set to 15 minutes (900 seconds)
-AUTO_DELETE_TIME = int(os.getenv("AUTO_DELETE_TIME", "900"))
+AUTO_DELETE_TIME = int(os.getenv("AUTO_DELETE_TIME", "1200"))
 
 # Convert to human-readable format
 minutes = AUTO_DELETE_TIME // 60
@@ -104,7 +104,7 @@ USER_REPLY_TEXT = "<blockquote>💖 I’m loyal to one place—@CulturedTeluguwe
 
 
 ADMINS.append(OWNER_ID)
-ADMINS.append(6266529037)
+#ADMINS.append( )
 
 LOG_FILE_NAME = "filesharingbot.txt"
 
