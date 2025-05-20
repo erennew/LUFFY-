@@ -424,7 +424,7 @@ async def unified_start(client: Client, message: Message):
         return
     
         # After boot animation and file handling code...
- # Default start message
+     # No encoded file - show greeting UI
     reply_markup = InlineKeyboardMarkup(
         [
             [
@@ -434,37 +434,35 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-    #effect_id = random.choice(list(EFFECT_IDS))
-
+    # Use the working effect ID from the other code
     if START_PIC:
         msg = await message.reply_photo(
             photo=random.choice(PICS),
             caption=START_MSG.format(
                 first=message.from_user.first_name,
-                last=message.from_user.last_name or '',
-                username=f"@{message.from_user.username}" if message.from_user.username else None,
+                last=message.from_user.last_name,
+                username=None if not message.from_user.username else '@' + message.from_user.username,
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5381769629447862275  # ⚡ Thunder (working ID)
+            message_effect_id=5104841245755180586  # Using the confirmed working effect ID
         )
     else:
         msg = await message.reply_text(
             text=START_MSG.format(
                 first=message.from_user.first_name,
-                last=message.from_user.last_name or '',
-                username=f"@{message.from_user.username}" if message.from_user.username else None,
+                last=message.from_user.last_name,
+                username=None if not message.from_user.username else '@' + message.from_user.username,
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5381769629447862275
+            message_effect_id=5104841245755180586  # Same effect for text
         )
 
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
-
       
 
 
