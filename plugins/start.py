@@ -446,7 +446,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5381769629447862272  # Using the confirmed working effect ID(sparkle)
+            message_effect_id=5104841245755180586    # Using the confirmed working effect ID(sparkle)
         )
     else:
         msg = await message.reply_text(
