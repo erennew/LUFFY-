@@ -8,7 +8,7 @@ from pyrogram.enums import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 from bot import Bot
-PICS = (os.environ.get("PICS", "https://i.ibb.co/Kx5mS6V5/x.jpg https://i.ibb.co/jZQHRzKv/x.jpg https://i.ibb.co/PvB2DVHQ/x.jpg https://i.ibb.co/cSYRkdz6/x.jpg https://i.ibb.co/FjwYKW9/x.jpg")).split()
+PICS = (os.environ.get("PICS", "https://i.ibb.co/Kx5mS6V5/x.jpg https://i.ibb.co/JR9p0sn6/x.png https://i.ibb.co/gMs2DG6C/x.jpg https://i.ibb.co/cSYRkdz6/x.jpg https://i.ibb.co/FjwYKW9/x.jpg")).split()
 from config import MAX_REQUESTS, TIME_WINDOW
 from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT, START_PIC, FORCE_PIC, AUTO_DELETE_TIME, AUTO_DELETE_MSG, JOIN_REQUEST_ENABLE, FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2, FORCE_SUB_CHANNEL_3, FORCE_SUB_CHANNEL_4
 from helper_func import subscribed, decode, get_messages, delete_file
@@ -427,46 +427,53 @@ async def unified_start(client: Client, message: Message):
     
     # No encoded file - show greeting UI
         # No encoded file - show greeting UI
-    reply_markup = InlineKeyboardMarkup(
-        [
+        reply_markup = InlineKeyboardMarkup(
             [
-                InlineKeyboardButton("📜 Pirate Log", callback_data="about"),
-                InlineKeyboardButton("🗺️ Close Map", callback_data="close")
+                [
+                    InlineKeyboardButton("📜 Pirate Log", callback_data="about"),
+                    InlineKeyboardButton("🗺️ Close Map", callback_data="close")
+                ]
             ]
-        ]
-    )
+        )
+       # Get a random effect ID from your predefined list
     effect_id = random.choice(list(EFFECT_IDS.values()))
-
-    # Use the working effect ID from the other code
-    if START_PIC:
-        msg = await message.reply_photo(
-            photo=random.choice(PICS),
-            caption=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=reply_markup,
-            message_effect_id=effect_id  # Using the confirmed working effect ID
-        )
-    else:
-        msg = await message.reply_text(
-            text=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=None if not message.from_user.username else '@' + message.from_user.username,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=reply_markup,
-            message_effect_id=effect_id  # Same effect for text
-        )
-
-    if AUTO_CLEAN:
-        asyncio.create_task(auto_clean(client, msg))
-
+    
+    try:
+        if START_PIC:
+            # Photo message with effect
+            msg = await message.reply_photo(
+                photo=random.choice(PICS),
+                caption=START_MSG.format(
+                    first=message.from_user.first_name,
+                    last=message.from_user.last_name or '',  # Handle None case
+                    username=f"@{message.from_user.username}" if message.from_user.username else None,
+                    mention=message.from_user.mention,
+                    id=message.from_user.id
+                ),
+                reply_markup=reply_markup,
+                message_effect_id=effect_id
+            )
+        else:
+            # Text message with same effect
+            msg = await message.reply_text(
+                text=START_MSG.format(
+                    first=message.from_user.first_name,
+                    last=message.from_user.last_name or '',  # Handle None case
+                    username=f"@{message.from_user.username}" if message.from_user.username else None,
+                    mention=message.from_user.mention,
+                    id=message.from_user.id
+                ),
+                reply_markup=reply_markup,
+                message_effect_id=effect_id
+            )
+    
+        if AUTO_CLEAN:
+            # Schedule auto-cleanup without awaiting
+            asyncio.create_task(auto_clean(client, msg))
+    
+    except Exception as e:
+        print(f"Message sending failed: {e}")
+    # Consider adding retry logic here if needed
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
