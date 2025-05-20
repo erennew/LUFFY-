@@ -434,7 +434,7 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-    effect_id = random.choice(list(EFFECT_IDS.values()))
+    effect_id = random.choice(list(EFFECT_IDS)
     
     try:
         if START_PIC:
