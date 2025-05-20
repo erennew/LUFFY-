@@ -38,7 +38,7 @@ WAIT_MSGS = [
    # 5381769629447862274,  # heart
     # 5381769629447862275,  # thunder
     # 5381769629447862276,  # confetti
-}
+#}
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
         chat_id=FORCE_SUB_CHANNEL_1,
