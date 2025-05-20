@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 from config import DELETE_DELAY, AUTO_CLEAN
 from pyrogram import Client, filters, __version__
 from pyrogram.enums import ParseMode, ChatAction
+from pyrogram.errors import BadRequest
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, ChatInviteLink, ChatPrivileges
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 WAIT_MSGS = [
@@ -31,6 +32,13 @@ WAIT_MSGS = [
     """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
     """<b><blockquote>Patience, my friend! I'm off to find the One Piece, but I'll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
 ]
+EFFECT_IDS = {
+    "fire": 5104841245755180586,    # 🔥 
+    "poof": 5104841245755180585,    # ✨
+    "heart": 5104841245755180584,   # ❤️
+    "thunder": 5104841245755180587, # ⚡
+    "confetti": 5104841245755180583 # 🎉
+}
 
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
@@ -412,56 +420,77 @@ async def unified_start(client: Client, message: Message):
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
         return
 
-     # No encoded file - show greeting UI
-    reply_markup = InlineKeyboardMarkup(
-        [
+        # No encoded file - show greeting UI
+        reply_markup = InlineKeyboardMarkup(
             [
-                InlineKeyboardButton("📜 Pirate Log", callback_data="about"),
-                InlineKeyboardButton("🗺️ Close Map", callback_data="close")
+                [
+                    InlineKeyboardButton("📜 Pirate Log", callback_data="about"),
+                    InlineKeyboardButton("🗺️ Close Map", callback_data="close")
+                ]
             ]
-        ]
-    )
-
-    if START_PIC:
-        msg = await message.reply_photo(
-            photo=random.choice(PICS),
-            caption=START_MSG.format(
-                first=message.from_user.first_name,
-                last=message.from_user.last_name,
-                username=f"@{message.from_user.username}" if message.from_user.username else None,
-                mention=message.from_user.mention,
-                id=message.from_user.id
-            ),
-            reply_markup=reply_markup,
-            message_effect_id=5104841245755180587  # ⚡ Thunder effect
         )
-    else:
+    
+        # Select a random effect from our available effects
         try:
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=5104841245755180587  # ⚡ Thunder effect
-            )
-        except Exception as e:
-            print(f"[!] Message effect failed: {e}")
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup
-            )
-    if AUTO_CLEAN:
-        asyncio.create_task(auto_clean(client, msg))
+            selected_effect = random.choice(list(EFFECT_IDS.values()))
+        except (KeyError, IndexError):
+            selected_effect = None  # Fallback to no effect if dictionary is empty
+    
+        if START_PIC:
+            try:
+                msg = await message.reply_photo(
+                    photo=random.choice(PICS),
+                    caption=START_MSG.format(
+                        first=message.from_user.first_name,
+                        last=message.from_user.last_name,
+                        username=f"@{message.from_user.username}" if message.from_user.username else None,
+                        mention=message.from_user.mention,
+                        id=message.from_user.id
+                    ),
+                    reply_markup=reply_markup,
+                    message_effect_id=selected_effect if selected_effect else None
+                )
+            except BadRequest:
+                # Fallback without effect
+                msg = await message.reply_photo(
+                    photo=random.choice(PICS),
+                    caption=START_MSG.format(
+                        first=message.from_user.first_name,
+                        last=message.from_user.last_name,
+                        username=f"@{message.from_user.username}" if message.from_user.username else None,
+                        mention=message.from_user.mention,
+                        id=message.from_user.id
+                    ),
+                    reply_markup=reply_markup
+                )
+        else:
+            try:
+                msg = await message.reply_text(
+                    text=START_MSG.format(
+                        first=message.from_user.first_name,
+                        last=message.from_user.last_name,
+                        username=f"@{message.from_user.username}" if message.from_user.username else None,
+                        mention=message.from_user.mention,
+                        id=message.from_user.id
+                    ),
+                    reply_markup=reply_markup,
+                    message_effect_id=selected_effect if selected_effect else None
+                )
+            except BadRequest:
+                # Fallback without effect
+                msg = await message.reply_text(
+                    text=START_MSG.format(
+                        first=message.from_user.first_name,
+                        last=message.from_user.last_name,
+                        username=f"@{message.from_user.username}" if message.from_user.username else None,
+                        mention=message.from_user.mention,
+                        id=message.from_user.id
+                    ),
+                    reply_markup=reply_markup
+                )
+    
+        if AUTO_CLEAN:
+            asyncio.create_task(auto_clean(client, msg))
 
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
