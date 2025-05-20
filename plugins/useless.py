@@ -7,9 +7,12 @@ from helper_func import get_readable_time
 import time
 import psutil
 import asyncio
-import logging
 import humanize  # For human-readable sizes
 from pyrogram.enums import ChatAction
+from database.database import add_user, del_user, full_userbase, present_user
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 # Admin filter for convenience
 admin = filters.user(ADMINS)
 
