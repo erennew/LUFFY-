@@ -435,8 +435,6 @@ async def unified_start(client: Client, message: Message):
     )
 
     effect_id = random.choice(list(EFFECT_IDS))
-    
-    try:
         if START_PIC:
             msg = await message.reply_photo(
                 photo=random.choice(PICS),
@@ -468,6 +466,8 @@ async def unified_start(client: Client, message: Message):
     except Exception as e:
         print(f"Final message error: {e}")
         # Consider adding retry logic here if needed
+    
+
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
 @Bot.on_message(filters.command('users') & filters.private & filters.user(ADMINS))
