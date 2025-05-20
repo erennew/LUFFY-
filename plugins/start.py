@@ -31,14 +31,14 @@ WAIT_MSGS = [
     """<b><blockquote>I'm still in the middle of a crazy adventure! Give me a second, and I'll be right with you! 🍉</blockquote></b>""",
     """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
     """<b><blockquote>Patience, my friend! I'm off to find the One Piece, but I'll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
-]
+]"""
 EFFECT_IDS = {
      5381769629447862272,  # fire
     5381769629447862273,  # poof
     5381769629447862274,  # heart
     5381769629447862275,  # thunder
     5381769629447862276,  # confetti
-}
+}"""
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
         chat_id=FORCE_SUB_CHANNEL_1,
@@ -434,7 +434,7 @@ async def unified_start(client: Client, message: Message):
         ]
     )
 
-    effect_id = random.choice(list(EFFECT_IDS))
+    #effect_id = random.choice(list(EFFECT_IDS))
 
     if START_PIC:
         msg = await message.reply_photo(
@@ -447,7 +447,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=effect_id
+            message_effect_id=5381769629447862275
         )
     else:
         msg = await message.reply_text(
@@ -459,7 +459,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=effect_id
+            message_effect_id=5381769629447862275
         )
 
     if AUTO_CLEAN:
