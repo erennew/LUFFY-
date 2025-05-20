@@ -93,12 +93,12 @@ async def unified_start(client: Client, message: Message):
     
         buttons = [
             [
-                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite1.invite_link),
-                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite2.invite_link),
+                InlineKeyboardButton(text="🏴‍☠️ 𝗠𝗮𝗶𝗻 𝗖𝗵𝗮𝗻𝗻𝗲𝗹 🏴‍☠️", url=invite1.invite_link),
+                InlineKeyboardButton(text="🔥 𝗢𝗻𝗴𝗼𝗶𝗻𝗴 ⚡", url=invite2.invite_link),
             ],
             [
-                InlineKeyboardButton(text="• ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ", url=invite3.invite_link),
-                InlineKeyboardButton(text="ᴊᴏɪɴ ᴄʜᴀɴɴᴇʟ •", url=invite4.invite_link),
+                InlineKeyboardButton(text="🌟 Pirate Movie Vault", url=invite3.invite_link),
+                InlineKeyboardButton(text="🏁 Pirate's Treasure", url=invite4.invite_link),
             ],
             [
                 InlineKeyboardButton(
