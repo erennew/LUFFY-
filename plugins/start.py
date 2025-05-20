@@ -32,6 +32,13 @@ WAIT_MSGS = [
     """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
     """<b><blockquote>Patience, my friend! I'm off to find the One Piece, but I'll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
 ]
+EFFECT_IDS = {
+        "fire": 5381769629447862272,    # 🔥 
+        "poof": 5381769629447862273,    # ✨
+        "heart": 5381769629447862274,   # ❤️
+        "thunder": 5381769629447862275, # ⚡
+        "confetti": 5381769629447862276 # 🎉
+}
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
         chat_id=FORCE_SUB_CHANNEL_1,
@@ -134,181 +141,185 @@ async def unified_start(client: Client, message: Message):
 
     # Boot animation setup
     boot_sequences = [
-        # 10 sequences with 3 lines each
+        # East Blue Saga
         [
-            "👒 'I'm gonna be King of the Pirates!' (Luffy to Shanks)",
-            "🩸 'I bet my arm on the new era!' (Shanks' sacrifice)",
-            "🌊 A boy's promise—the sea itself listened."
+            "👒 I'm gonna be King of the Pirates! The freest man on the sea!",
+            "🩸 Shanks' sacrifice burns in my heart - I'll make his bet worth it!",
+            "🌊 The waves themselves cheer as a legend begins!"
         ],
         [
-            "🔪 'Luffy... HELP ME!' (Nami stabs her tattoo)",
-            "👊 'OF COURSE I WILL!' (hat placed on her head)",
-            "💥 Arlong's teeth shattered—the East Blue shook."
-        ],
-        [
-            "☀️ 'Vivi! Can you hear our voices?!' (X-marked arms raised)",
-            "🏜️ 'I will... SURPASS YOU!' (Luffy punches Crocodile through bedrock)",
-            "🤝 A kingdom saved—'We were already friends!'"
-        ],
-        [
-            "⚡ 'I'll ring that bell for you, Cricket!'",
-            "🔔 400-year-old sound—Noland's descendant weeps",
-            "☁️ 'The City of Gold... WAS REAL!' (echoes across the sky)"
-        ],
-        [
-            "🔥 'SHE SAID SHE WANTS TO LIVE!' (Luffy vs. Spandam)",
-            "🏴‍☠️ World Government flag burns—'Bring your buster call!'",
-            "🌉 'We're going home, Robin!'—the bridge collapses."
-        ],
-        [
-            "⚰️ 'Thank you... for loving me.' (Ace's last words)",
-            "💔 Luffy's scream—Whitebeard's rage ignites",
-            "⚡ 'THE ONE PIECE... IS REAL!' (shakes the world)"
-        ],
-        [
-            "👑 'I'll make this country smile again!'",
-            "💥 'Gear Fourth... KING KONG GUN!' (Doflamingo crashes)",
-            "🤝 Law's tears—'Corazon... I did it.'"
-        ],
-        [
-            "🚬 'I want... to go back to the Sunny!' (Sanji's tears)",
-            "🍖 'I won't eat... til you come home!' (Luffy's hunger strike)",
-            "💥 The cook kneels—'YOUR DREAM IS MINE TOO!'"
-        ],
-        [
-            "🥁 'That sound... the Drums of Liberation!' (Zunesha)",
-            "⚡ 'Joy Boy... IS YOU?!' (Kaido's realization)",
-            "🌅 Dawn breaks—'Meat for everyone!'"
-        ],
-        [
-            "🤖 'Joy Boy... you've returned.' (Iron Giant awakens)",
-            "⚡ 'I'm not done fighting yet!' (Luffy vs. Kizaru)",
-            "🌍 Vegapunk's broadcast—the world hears the truth."
+            "🔪 Nami's tears fall like rain - HELP ME LUFFY!",
+            "👊 I'll destroy every last brick of Arlong Park for my friend!",
+            "💥 The East Blue trembles as a monster awakens!"
         ],
     
-        # 4 sequences with 5 lines each
+        # Alabasta Saga
         [
-            "⛓️ 'I'm breaking in... and breaking out with Ace!'",
-            "🩸 Poisoned and broken—Luffy crawls through hell",
-            "💉 'You might die from this!' (Ivankov's warning)",
-            "🔥 'I DON'T CARE!'—Jinbe carries his corpse",
-            "⏳ Clock ticks—'ACE... HOLD ON!'"
+            "☀️ Vivi's screams echo - WE HEAR YOU! OUR FRIEND!",
+            "🏜️ Crocodile... I'll punch you through bedrock for Alabasta!",
+            "🤝 No more tears - we dance in the rain of a saved kingdom!"
         ],
         [
-            "⛓️ 'I'm breaking in... and breaking out with Ace!'",
-            "🩸 Poisoned and broken—Luffy crawls through hell",
-            "💉 'You might die from this!' (Ivankov's warning)",
-            "🔥 'I DON'T CARE!'—Jinbe carries his corpse",
-            "⏳ Clock ticks—'ACE... HOLD ON!'"
+            "⚡ I'll ring that bell so the whole world hears it!",
+            "🔔 400 years of waiting answered with a single punch!",
+            "☁️ The sky itself sings - Noland wasn't a liar!"
+        ],
+    
+        # Water 7/Enies Lobby
+        [
+            "🔥 ROBIN SAYS SHE WANTS TO LIVE! THAT'S ENOUGH FOR ME!",
+            "🏴‍☠️ Let the World Government burn - I declare war for my crew!",
+            "🌉 The bridge of lies crumbles - we're going home together!"
+        ],
+    
+        # Summit War Saga
+        [
+            "⚰️ Ace... why won't your body move?! OPEN YOUR EYES!",
+            "💔 My scream shatters Marineford - Whitebeard's rage answers!",
+            "⚡ The world hears it - THE ONE PIECE IS REAL!"
         ],
         [
-            "🔥 'Ace... I'm coming! I'll save you no matter what!' (Luffy's desperate cry)",
-            "💥 'I won't let anyone stop me! Not Marines, not Warlords, NOT EVEN THE ADMIRALS!'",
-            "⚔️ 'Every wall will break! Every enemy will fall! I'm getting through!'",
-            "🩸 Bloodied but unbroken—'I'LL REACH YOU, ACE!'",
-            "💔 'Just hold on... YOUR LITTLE BROTHER IS COMING!' (Impel Down shakes)"
+            "⛓️ I'll break every wall in Impel Down for Ace!",
+            "🩸 Poisoned, broken, dying - I'LL STILL REACH YOU!",
+            "💉 I DON'T CARE IF I DIE! ACE IS WAITING!"
+        ],
+    
+        # New World
+        [
+            "👑 Dressrosa will smile again - I promise!",
+            "💥 KING KONG GUN! Doflamingo crashes through his own kingdom!",
+            "🤝 Law... your war is mine now - Corazon can rest!"
         ],
         [
-            "⚡ Kizaru: 'This power... the Gorosei weren't lying about Nika.'",
-            "👊 Luffy grabs light itself: 'YOUR SPEED... IS TOO SLOW NOW!'",
-            "🎭 'EVERYTHING IS FUNNIER IN GEAR 5!' (stretches Kizaru's laser)",
-            "💥 Saturn's order: 'ERASE HIM BEFORE THE WORLD SEES!'",
-            "🌐 The Iron Giant stands - 'THE SUN... HAS RETURNED.'"
+            "🚬 Sanji... YOUR DREAM MATTERS TOO!",
+            "🍖 I won't eat... I won't move... I'LL STARVE UNTIL YOU RETURN!",
+            "💥 The cook kneels - I'm coming home to the Sunny!"
+        ],
+    
+        # Wano Country
+        [
+            "🥁 BOOM-BOOM! My heart beats like liberation drums!",
+            "⚡ Kaido... YOU CAN'T KILL JOY BOY!",
+            "🌅 Dawn breaks over Wano - MEAT FOR EVERYONE!"
         ],
         [
-            "⚔️ 'This war... ENDS NOW.' (Shanks stops Akainu)",
-            "🍷 'Luffy's not ready... but he will be King.'",
-            "⚰️ Whitebeard stands in death—no retreating wounds",
-            "🌊 'We'll meet again... on the grand stage.' (to Luffy)",
-            "⏳ Era shifts—the Great Pirate Age intensifies"
+            "🌟 Gear Five... this is my absolute peak!",
+            "🎭 Laughing through the pain - FIGHTING SHOULD BE FUN!",
+            "☀️ The Sun God rises - 20 years of darkness ENDS TODAY!"
+        ],
+    
+        # Egghead/Elbaf
+        [
+            "🤖 Joy Boy has returned! The Iron Giant awakens!",
+            "⚡ Kizaru... YOUR LIGHT IS TOO SLOW FOR THE SUN GOD!",
+            "🌍 Vegapunk's truth shakes the world - THE VOID CENTURY LIES EXPOSED!"
         ],
         [
-            "🐉 'You can't be Joy Boy... I'LL KILL YOU HERE!' (Kaido)",
-            "⚡ 'I'll make Wano... where everyone can eat!'",
-            "🥁 Drums echo—Gear Fifth's laughter shakes Onigashima",
-            "🌟 'This is my peak... THE SUN GOD!'",
-            "☀️ Kaido falls—20 years of darkness end"
+            "🪓 Elbaf stands with me - THE FINAL WAR BEGINS!",
+            "⚔️ Shanks smiles - You've surpassed even Roger, Luffy!",
+            "🔥 The seas tremble as the Pirate King's era dawns!"
+        ],
+    
+        # Iconic Quotes
+        [
+            "👊 I can't use swords or navigate... BUT I CAN BEAT YOU!",
+            "⚡ Heroes share their meat? THEN I DON'T WANT TO BE A HERO!",
+            "🌊 When does a man die? WHEN HE'S FORGOTTEN!"
         ],
         [
-            "🪓 'Straw Hat! We stand with you!' (Giants roar in unison)",
-            "💥 'I won't let anyone stop us! This war is ours to win!'",
-            "🌍 'The road to Laugh Tale... we'll claim it together!'",
-            "⚔️ Shanks smiles—'He's surpassed even my expectations...'",
-            "🔥 'Let the final war BEGIN!'—the seas tremble with anticipation"
-        ],
+            "💥 I don't care about gods or kings - I PUNCH WHAT'S WRONG!",
+            "🕊️ The Warrior of Liberation brings JOY to the oppressed!",
+            "👑 My dream? A WORLD WHERE NO ONE STARVES!"
+        ].
+            # Marineford Aftermath
         [
-            "📜 Vegapunk's broadcast: 'The World Government erased Nika for 800 years...'",
-            "🕊️ 'The Warrior of Liberation... who brings JOY to the oppressed!'",
-            "👑 Luffy grins: 'I don't care about gods... I just punch what's wrong!'",
-            "🤖 Ancient Robot awakens: 'JOY BOY... YOU CAME BACK.'",
-            "🌍 The world hears - slaves smile as chains crack"
+            "⚰️ Ace's vivre card turns to ash in my trembling hands",
+            "🌋 The war isn't over - MY CREW NEEDS ME!",
+            "⏳ Two years... I'll come back STRONGER THAN ANYONE!"
         ],
+    
+        # Fishman Island
         [
-            "🥁 *Drums of Liberation echo* - Zunesha's eyes widen: 'Joy Boy... has returned!'",
-            "🌟 Luffy's heartbeat *BOOM-BOOM* - Kaido staggers: 'That sound...?!'",
-            "☀️ 'MY DREAM... IS TO BE FREE!' (Gear 5 hair flows like flames)",
-            "⚡ 'This is my PEAK... GEAR FIVE!' (laughs while punching through Kaido's blast breath)",
-            "🌅 The sun rises over Onigashima - 'MEAT... FOR EVERYONE!'"
+            "🐋 Jinbe's blood offered - I WON'T LET HATE WIN!",
+            "🌊 This island will smile under MY FLAG!",
+            "🤝 Fishmen and humans - WE'RE ALL CREWMATES NOW!"
         ],
-        # 6 sequences with 6 lines each
+    
+        # Zou Revelation
         [
-            "⏳ 'Two years... I trained to protect them all!'",
-            "🌊 Rayleigh smiles—'Now go... be King.'",
-            "⚡ 'Did we... get stronger?!' (Pacifista obliterated)",
-            "👑 'WE'RE BACK!'—the real crew appears",
-            "🌍 Sentomaru's shock—'The monsters... have returned'",
-            "🚢 Sunny flies—the New World trembles"
+            "🐾 The Minks' sacrifice - WE'D DIE FOR RAIDO'S SAFETY!",
+            "🔥 Sanji's in trouble? THEN WE'RE GOING TO WHOLE CAKE!",
+            "⚡ No mountain is too high - I'LL PUNCH THROUGH A YONKO!"
         ],
+    
+        # Wano Act 1
         [
-            "🚬 'I'll go to Whole Cake... to save you all.' (Sanji)",
-            "💔 Nami's slap—'WE'RE YOUR CREW! WE FIGHT TOGETHER!'",
-            "🥄 'My hands... are for cooking.' (Sanji's trembling fists)",
-            "🌊 'I'LL WAIT HERE... TIL YOU RETURN!' (Luffy's vow)",
-            "⚡ 'THE MINKS WOULD DIE FOR THIS!' (Raizo is safe)",
-            "🔥 Yonko hunt begins—'We're getting our cook back!'"
+            "🍡 Tama's starving - THIS IS WHAT KAIDO TOOK FROM THEM!",
+            "💢 Yamato's chains break - I WANT TO LIVE LIKE ODEN!",
+            "🗡️ The scabbards' tears - 20 YEARS OF WAITING ENDS NOW!"
         ],
-        
+    
+        # Gear 5 First Transformation
         [
-            "🍩 'You keep seeing the future... BUT I'LL CHANGE IT!'",
-            "👊 12-hour battle—neither yields an inch",
-            "🩸 'This is... MY HONOR!' (Katakuri stabs himself)",
-            "💥 'YOU'LL BE A GREAT KING!' (Katakuri falls)",
-            "👑 'SANJI... LET'S GO HOME!' (Luffy stands victorious)",
-            "🚢 Sunny escapes—Big Mom's rage shakes the sea"
+            "💀 My heart stops... then BOOM-BOOM-BOOM!",
+            "🎭 Why so serious, Kaido? FIGHTING SHOULD BE FUN!",
+            "☀️ The sun rises in my chest - GEAR FIVE... LIBERATION!"
         ],
+    
+        # Egghead Escape
         [
-            "📰 'Straw Hat Luffy... FIFTH EMPEROR!' (news spreads)",
-            "⚔️ 'REVOLUTIONARY COMMANDER DEFEATED?!' (Sabo's fate)",
-            "👑 Vivi disappears—Alabasta in chaos",
-            "🌊 Shanks meets Gorosei—'We must talk... about 'him.'",
-            "⚡ Blackbeard moves—'Let's get that before the Marines!'",
-            "🌍 World Government panics—gears of fate turn"
+            "🤖 Ancient weapons? I DON'T CARE - VEGAPUNK'S MY FRIEND!",
+            "⚡ Kizaru's lasers bend - YOUR SPEED MEANS NOTHING NOW!",
+            "🌌 Saturn's order: ERASE US? YOU CAN'T ERASE THE TRUTH!"
         ],
+    
+        # Elbaf Declaration
         [
-            "📡 'The Void Century... the Ancient Weapons... IT'S ALL TRUE!'",
-            "🤖 Iron Giant walks—'JOY BOY... HAS RETURNED!'",
-            "⚡ 'Luffy... what have you become?' (Kizaru conflicted)",
-            "🌌 'The World Government... LIED TO US ALL!'",
-            "🔥 'ERASE EGGHEAD FROM HISTORY!' (Saturn's fury)",
-            "🚀 Straw Hats escape—the truth cannot be stopped"
+            "🪓 The giants roar - WE MARCH WITH JOY BOY!",
+            "🍻 Shanks' toast - YOU'VE EARNED THE ONE PIECE, LUFFY!",
+            "🌍 The final poneglyph - LAUGH TALE AWAITS!"
         ],
+    
+        # Luffy's Philosophy
         [
-            "📖 Robin reads the Poneglyph: 'The Dawn Will Come With Laughing Drums...'",
-            "⚔️ Shanks to Rayleigh: 'He's not just Roger's successor... he's Nika reborn.'",
-            "🌅 Luffy's shadow dances - slaves worldwide feel their chains loosen",
-            "🔥 Dragon's revelation: 'The Revolutionary Army exists... TO CLEAR NIKA'S PATH.'",
-            "👑 Final panel: Straw Hat flies - 'THIS IS MY PEAK... LET'S END THIS!'"
+            "👑 Pirate King? IT MEANS THE FREEST MAN ALIVE!",
+            "💔 I don't want to conquer... I WANT EVERYONE TO EAT!",
+            "⚡ When my friends cry... THE WORLD WILL BURN!"
         ],
+            # The Awakening
         [
-            "⚔️ 'The giants stand with Joy Boy!' (Elbaf's army)",
-            "🏴‍☠️ Shanks raises Gryphon—'The One Piece awaits!'",
-            "🌊 Blackbeard laughs—'Let's make this era OURS!'",
-            "🐉 Dragon mobilizes—'The revolution... begins NOW.'",
-            "👑 'Meat for everyone when I win!' (Luffy grins)",
-            "🌅 Dawn approaches—'This is... THE FINAL WAR!'"
+            "🥁 BOOM-BOOM! My heartbeat echoes across Wano",
+            "🌟 Kaido's eyes widen - 'JOY BOY... IT WAS YOU ALL ALONG?!'",
+            "☀️ 800 years of waiting ends - THE SUN GOD RISES!"
+        ],
+    
+        # Egghead Truth
+        [
+            "📜 Vegapunk's voice shakes - 'They erased Nika from history...'",
+            "🕊️ Slaves worldwide feel it - THEIR WARRIOR OF LIBERATION LIVES",
+            "🤖 The Iron Giant weeps - 'YOU CAME BACK, JOY BOY!'"
+        ],
+    
+        # The Prophecy
+        [
+            "🌅 Robin reads the Poneglyph - 'THE DRUMS WILL BRING DAWN'",
+            "⚡ Shanks whispers - 'He's not Roger's successor... but Nika reborn'",
+            "👑 Luffy laughs - 'I DON'T CARE ABOUT LEGENDS! I JUST PUNCH TYRANTS!'"
+        ],
+            # Ace's Last Breath (Ch. 574)
+        [
+            "🩸 Ace's hole burns through my arms - 'TELL EVERYONE... I'M SORRY'",
+            "💀 My voice breaks - 'ACE... ACE! DON'T LEAVE ME LIKE SABO DID!'",
+            "⚰️ Whitebeard's roar - 'THE ONE PIECE IS REAL!' (but all I hear is silence)"
+        ],
+    
+        # The Abyss (Post-Marineford)
+        [
+            "🌑 I stare at my hands - 'WHY AM I TOO WEAK TO PROTECT ANYONE?!'",
+            "🪦 Jinbe finds me clutching ashes - 'THESE ARE ALL THAT'S LEFT OF ACE...'",
+            "⏳ Rayleigh's hand grips mine - 'SUFFER NOW... OR LOSE EVERYTHING NEXT TIME'"
         ]
     ]
-
     steps = random.choice(boot_sequences)
 
     # Send the initial boot message
@@ -413,7 +424,7 @@ async def unified_start(client: Client, message: Message):
         return
     
         # After boot animation and file handling code...
-
+    
     # No encoded file - show greeting UI
         # No encoded file - show greeting UI
     reply_markup = InlineKeyboardMarkup(
@@ -424,6 +435,7 @@ async def unified_start(client: Client, message: Message):
             ]
         ]
     )
+    effect_id = random.choice(list(EFFECT_IDS.values()))
 
     # Use the working effect ID from the other code
     if START_PIC:
@@ -437,7 +449,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5104841245755180586  # Using the confirmed working effect ID
+            message_effect_id=effect_id  # Using the confirmed working effect ID
         )
     else:
         msg = await message.reply_text(
@@ -449,7 +461,7 @@ async def unified_start(client: Client, message: Message):
                 id=message.from_user.id
             ),
             reply_markup=reply_markup,
-            message_effect_id=5104841245755180586  # Same effect for text
+            message_effect_id=effect_id  # Same effect for text
         )
 
     if AUTO_CLEAN:
