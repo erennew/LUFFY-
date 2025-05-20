@@ -446,7 +446,8 @@ async def unified_start(client: Client, message: Message):
                 mention=message.from_user.mention,
                 id=message.from_user.id
             ),
-            reply_markup=reply_markup
+            reply_markup=reply_markup,
+            message_effect_id=effect_id
         )
     else:
         msg = await message.reply_text(
