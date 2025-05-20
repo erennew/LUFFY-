@@ -331,12 +331,12 @@ async def unified_start(client: Client, message: Message):
 
     # Loop through each step safely
     for step in steps:
-        await asyncio.sleep(random.uniform(0.5, 1.2))
+        await asyncio.sleep(random.uniform(0.5, 1.5))
         with contextlib.suppress(Exception):
             await progress.edit(step)
 
     # Try to delete the boot message safely
-    await asyncio.sleep(0.5)
+    await asyncio.sleep(0.8)
     with contextlib.suppress(Exception):
         await progress.delete()
 
