@@ -31,14 +31,6 @@ WAIT_MSGS = [
     """<b><blockquote>I'm still in the middle of a crazy adventure! Give me a second, and I'll be right with you! 🍉</blockquote></b>""",
     """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
     """<b><blockquote>Patience, my friend! I'm off to find the One Piece, but I'll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
-]
-EFFECT_IDS = {
-    "fire": 5104841245755180586,    # 🔥 
-    "poof": 5104841245755180585,    # ✨
-    "heart": 5104841245755180584,   # ❤️
-    "thunder": 5104841245755180587, # ⚡
-    "confetti": 5104841245755180583 # 🎉
-}
 
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
@@ -420,7 +412,8 @@ async def unified_start(client: Client, message: Message):
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
         return
     
-    # This should be at the same level as the if len(text) > 7 block
+        # After boot animation and file handling code...
+
     # No encoded file - show greeting UI
     reply_markup = InlineKeyboardMarkup(
         [
@@ -430,15 +423,24 @@ async def unified_start(client: Client, message: Message):
             ]
         ]
     )
-    
-    # Select a random effect from our available effects
+
+    # Updated working effect IDs (July 2024)
+    EFFECT_IDS = {
+        "fire": 5381769629447862272,    # 🔥 
+        "poof": 5381769629447862273,    # ✨
+        "heart": 5381769629447862274,   # ❤️
+        "thunder": 5381769629447862275, # ⚡
+        "confetti": 5381769629447862276 # 🎉
+    }
+
     try:
-        selected_effect = random.choice(list(EFFECT_IDS.values()))
-    except (KeyError, IndexError):
-        selected_effect = None  # Fallback to no effect if dictionary is empty
-    
-    if START_PIC:
-        try:
+        # Select random effect only for premium users
+        if message.from_user.is_premium:
+            effect_id = random.choice(list(EFFECT_IDS.values()))
+        else:
+            effect_id = None
+            
+        if START_PIC:
             msg = await message.reply_photo(
                 photo=random.choice(PICS),
                 caption=START_MSG.format(
@@ -449,10 +451,25 @@ async def unified_start(client: Client, message: Message):
                     id=message.from_user.id
                 ),
                 reply_markup=reply_markup,
-                message_effect_id=selected_effect if selected_effect else None
+                message_effect_id=effect_id
             )
-        except BadRequest:
-            # Fallback without effect
+        else:
+            msg = await message.reply_text(
+                text=START_MSG.format(
+                    first=message.from_user.first_name,
+                    last=message.from_user.last_name,
+                    username=f"@{message.from_user.username}" if message.from_user.username else None,
+                    mention=message.from_user.mention,
+                    id=message.from_user.id
+                ),
+                reply_markup=reply_markup,
+                message_effect_id=effect_id
+            )
+
+    except BadRequest as e:
+        print(f"[!] Message effect failed: {e}")
+        # Fallback without effect
+        if START_PIC:
             msg = await message.reply_photo(
                 photo=random.choice(PICS),
                 caption=START_MSG.format(
@@ -464,21 +481,7 @@ async def unified_start(client: Client, message: Message):
                 ),
                 reply_markup=reply_markup
             )
-    else:
-        try:
-            msg = await message.reply_text(
-                text=START_MSG.format(
-                    first=message.from_user.first_name,
-                    last=message.from_user.last_name,
-                    username=f"@{message.from_user.username}" if message.from_user.username else None,
-                    mention=message.from_user.mention,
-                    id=message.from_user.id
-                ),
-                reply_markup=reply_markup,
-                message_effect_id=selected_effect if selected_effect else None
-            )
-        except BadRequest:
-            # Fallback without effect
+        else:
             msg = await message.reply_text(
                 text=START_MSG.format(
                     first=message.from_user.first_name,
@@ -489,10 +492,9 @@ async def unified_start(client: Client, message: Message):
                 ),
                 reply_markup=reply_markup
             )
-    
+
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
-
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
