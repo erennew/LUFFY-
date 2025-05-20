@@ -230,7 +230,7 @@ async def unified_start(client: Client, message: Message):
             "💥 I don't care about gods or kings - I PUNCH WHAT'S WRONG!",
             "🕊️ The Warrior of Liberation brings JOY to the oppressed!",
             "👑 My dream? A WORLD WHERE NO ONE STARVES!"
-        ].
+        ],
             # Marineford Aftermath
         [
             "⚰️ Ace's vivre card turns to ash in my trembling hands",
