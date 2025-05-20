@@ -31,7 +31,7 @@ WAIT_MSGS = [
     """<b><blockquote>I'm still in the middle of a crazy adventure! Give me a second, and I'll be right with you! 🍉</blockquote></b>""",
     """<b><blockquote>Hang in there! Even a Straw Hat pirate needs a breather sometimes! 😆</blockquote></b>""",
     """<b><blockquote>Patience, my friend! I'm off to find the One Piece, but I'll be back with your reward in no time! 🏴‍☠️</blockquote></b>"""
-
+]
 async def create_invite_links(client: Client):
     invite1 = await client.create_chat_invite_link(
         chat_id=FORCE_SUB_CHANNEL_1,
