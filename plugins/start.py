@@ -8,7 +8,7 @@ from pyrogram.enums import ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 from bot import Bot
-PICS = (os.environ.get("PICS", "https://i.ibb.co/Kx5mS6V5/x.jpg https://i.ibb.co/5g5sp5Ym/x.jpg https://i.ibb.co/JR9p0sn6/x.png https://i.ibb.co/8nJR2BPX/x.jpg https://i.ibb.co/LVr25qr/x.jpg https://i.ibb.co/SwzhMJ2K/x.jpg https://i.ibb.co/gMs2DG6C/x.jpg https://i.ibb.co/cSYRkdz6/x.jpg https://i.ibb.co/FjwYKW9/x.jpg")).split()
+PICS = (os.environ.get("PICS", "https://i.ibb.co/Kx5mS6V5/x.jpg https://i.ibb.co/5g5sp5Ym/x.jpg https://i.ibb.co/JR9p0sn6/x.png https://envs.sh/r6G.JPG https://i.ibb.co/8nJR2BPX/x.jpg https://i.ibb.co/LVr25qr/x.jpg https://i.ibb.co/SwzhMJ2K/x.jpg https://i.ibb.co/gMs2DG6C/x.jpg https://i.ibb.co/cSYRkdz6/x.jpg https://i.ibb.co/FjwYKW9/x.jpg")).split()
 from config import MAX_REQUESTS, TIME_WINDOW
 from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT, START_PIC, FORCE_PIC, AUTO_DELETE_TIME, AUTO_DELETE_MSG, JOIN_REQUEST_ENABLE, FORCE_SUB_CHANNEL_1, FORCE_SUB_CHANNEL_2, FORCE_SUB_CHANNEL_3, FORCE_SUB_CHANNEL_4
 from helper_func import subscribed, decode, get_messages, delete_file
