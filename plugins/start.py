@@ -466,7 +466,10 @@ async def unified_start(client: Client, message: Message):
             reply_markup=reply_markup,
             #message_effect_id=5104841245755180586  # Same effect for text
         )
-
+    # ✅ Add this block at the very end of the function new for deleting start command
+    await asyncio.sleep(60)
+    with contextlib.suppress(Exception):
+        await message.delete()
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
       
