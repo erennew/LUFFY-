@@ -421,10 +421,10 @@ async def unified_start(client: Client, message: Message):
                 text=AUTO_DELETE_MSG.format(time=AUTO_DELETE_TIME // 60)
             )
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
-	        async def auto_delete_warning(msg):
-	            await asyncio.sleep(AUTO_DELETE_TIME)
-	            with contextlib.suppress(Exception):
-	                await msg.delete()
+	    async def auto_delete_warning(msg):
+	        await asyncio.sleep(AUTO_DELETE_TIME)
+	        with contextlib.suppress(Exception):
+	            await msg.delete()
 
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
         return
