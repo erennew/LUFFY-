@@ -420,11 +420,7 @@ async def unified_start(client: Client, message: Message):
                 chat_id=message.from_user.id,
                 text=AUTO_DELETE_MSG.format(time=AUTO_DELETE_TIME // 60)
             )
-            asyncio.create_task(delete_file(track_msgs, client, delete_data))
-            async def auto_delete_warning(msg):
-                await asyncio.sleep(AUTO_DELETE_TIME)
-                with contextlib.suppress(Exception):
-                    await msg.delete()
+     
 
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
         return
@@ -465,10 +461,7 @@ async def unified_start(client: Client, message: Message):
             reply_markup=reply_markup,
             #message_effect_id=5104841245755180586  # Same effect for text
         )
-    # ✅ Add this block at the very end of the function new for deleting start command
-    await asyncio.sleep(60)
-    with contextlib.suppress(Exception):
-        await message.delete()
+
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
 
