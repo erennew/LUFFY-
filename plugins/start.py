@@ -296,7 +296,10 @@ async def unified_start(client: Client, message: Message):
             quote=True
         )
 
-
+    # ✅ Add this block at the very end of the function new for deleting start command
+    await asyncio.sleep(60)
+    with contextlib.suppress(Exception):
+        await message.delete()
 
 
 # =====================================================================================##
