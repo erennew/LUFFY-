@@ -421,16 +421,15 @@ async def unified_start(client: Client, message: Message):
                 text=AUTO_DELETE_MSG.format(time=AUTO_DELETE_TIME // 60)
             )
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
-		    async def auto_delete_warning(msg):
-		        await asyncio.sleep(AUTO_DELETE_TIME)
-		        with contextlib.suppress(Exception):
-		            await msg.delete()
+            async def auto_delete_warning(msg):
+                await asyncio.sleep(AUTO_DELETE_TIME)
+                with contextlib.suppress(Exception):
+                    await msg.delete()
 
             asyncio.create_task(delete_file(track_msgs, client, delete_data))
         return
     
         # After boot animation and file handling code...
-     # No encoded file - show greeting UI
     reply_markup = InlineKeyboardMarkup(
         [
             [
@@ -472,12 +471,6 @@ async def unified_start(client: Client, message: Message):
         await message.delete()
     if AUTO_CLEAN:
         asyncio.create_task(auto_clean(client, msg))
-      
-
-
-
-
-    
 
 REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
 
