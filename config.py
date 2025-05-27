@@ -50,7 +50,7 @@ START_MSG = os.environ.get(
 )
 try:
     ADMINS=[]
-    for x in (os.environ.get("ADMINS", " 1074804932 ").split()):
+    for x in (os.environ.get("ADMINS", " 1074804932 , 7187218010 ").split()):
         ADMINS.append(int(x))
 except ValueError:
         raise Exception("Your Admins list does not contain valid integers.")
@@ -105,7 +105,7 @@ USER_REPLY_TEXT = "<blockquote>💖 I’m loyal to one place—@CulturedTeluguwe
 
 ADMINS.append(OWNER_ID)
 ADMINS.append(1074804932)
-
+ADMINS.append(7187218010)
 LOG_FILE_NAME = "filesharingbot.txt"
 
 logging.basicConfig(
