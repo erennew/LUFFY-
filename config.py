@@ -26,8 +26,8 @@ OWNER_ID = int(os.environ.get("OWNER_ID", "1047253913"))
 PORT = os.environ.get("PORT", "8080")
 
 #Database 
-DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://luffyravi2000:AfeOePR1ZVQLJL4P@cluster2.qbjobeq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2")
-DB_NAME = os.environ.get("DATABASE_NAME", "Cluster2")
+DB_URI = os.environ.get("DATABASE_URL", "mongodb+srv://chattaravikiran2001:6nJQC6pb3wLf1zCu@cluster1.daxfzgr.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1")
+DB_NAME = os.environ.get("DATABASE_NAME", "Cluster1")
 
 
 JOIN_REQUEST_ENABLE = os.environ.get("JOIN_REQUEST_ENABLED", True)
