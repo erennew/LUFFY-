@@ -33,7 +33,7 @@ class Bot(Client):
         while True:
             try:
                 # Just maintain connection - no message needed
-                await asyncio.sleep(30)  # 5 minute intervals
+                await asyncio.sleep(10)  # 5 minute intervals
                 self.LOGGER(__name__).debug("Connection keep-alive check")
             except Exception as e:
                 self.LOGGER(__name__).error(f"Keep-alive error: {e}")
