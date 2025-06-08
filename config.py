@@ -1,4 +1,4 @@
-#(©) WeekendsBotz
+
 
 import os
 import logging
