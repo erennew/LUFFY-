@@ -86,8 +86,11 @@ AUTO_DELETE_MSG = os.environ.get(
     "AUTO_DELETE_MSG",
     f"⚠️ Dᴜᴇ ᴛᴏ Cᴏᴘʏʀɪɢʜᴛ ɪssᴜᴇs....\n\n"
     f"<blockquote>This file won’t stay long! You’ve got {AUTO_DELETE_HUMAN} before I throw it overboard!🏴‍☠️. "
-    f"Please ensure you have saved any necessary content before this time.</blockquote>"
+    f"Please ensure you have saved any necessary content before this time.</blockquote>\n\n"
+    f"Use our @Tfifiletolinkbot ғᴏʀ sᴛʀᴇᴀᴍ ᴀɴᴅ ғᴀsᴛ ᴅᴏᴡɴʟᴏᴀᴅ.\n"
+    f"<blockquote>Join chat @Culturedteluguweebchat</blockquote>"
 )
+
 
 # Message shown after deletion
 AUTO_DEL_SUCCESS_MSG = os.environ.get(
